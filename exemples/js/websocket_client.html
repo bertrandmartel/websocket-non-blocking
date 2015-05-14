@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<!--
+########## WEBSOCKET CLIENT - SERVER COMMUNICATION EXEMPLE ######################
+   -->
+<html>
+   <head>
+	
+      <script type="text/javascript">
+         
+         //websocket object
+         var ws;
+
+         // start a websocket client connecting to our local server
+         function launchWebsocketClient()
+         {
+            if ("WebSocket" in window)
+            {
+               //open websocket on port 4242
+               ws = new WebSocket("ws://localhost:4242");
+				
+               ws.onopen = function()
+               {
+                  document.getElementById("connectionState").innerHTML="Connected";
+                  document.getElementById("connectionState").style.color="green";
+
+                  logText("Connection to server with url : " + ws.URL);
+                  
+                  //send Hello to server
+                  ws.send("Hello I'm a new websocket client");
+               };
+				
+               ws.onmessage = function (evt) 
+               { 
+                  logText("Message received from websocket : " + evt.data);
+               };
+				
+               ws.onclose = function()
+               { 
+                  document.getElementById("connectionState").innerHTML="Disconnected";
+                  document.getElementById("connectionState").style.color="red";
+                  
+                  logText("Connection has been closed");
+               };
+            }
+            else
+            {
+               alert("WebSocket is NOT supported by your Browser!");
+            }
+         }
+
+         //close websocket if exists
+         function closeWebsocketClient()
+         {
+            if (typeof(ws)!="undefined")
+               ws.close();
+         }
+
+         //display something in body with log id
+         function logText(text)
+         {
+            var currentdate = new Date(); 
+                  var datetime = "[" 
+                   + currentdate.getHours() + ":"  
+                   + currentdate.getMinutes() + ":" 
+                   + currentdate.getSeconds() + "]";
+
+                  document.getElementById("log").innerHTML+=datetime + " " + text+"<br/>";
+
+         }
+
+         //clear all log
+         function clearLog()
+         {
+            document.getElementById("log").innerHTML="";
+         }
+
+         //send data to server
+         function sendDataToServer()
+         {
+            ws.send(document.getElementById("dataToSend").value);
+         }
+
+      </script>
+	
+   </head>
+	
+   <body>
+      <div id="main">
+         <input type="button" onClick="javascript:launchWebsocketClient();" value="Launch websocket client" />
+         <input type="button" onClick="javascript:closeWebsocketClient();" value="Close websocket client" />
+         <input type="button" onClick="javascript:clearLog();" value="Clear log" />
+         <p>
+            <span id="connectionState" style='color:red'>Disconnected</span> 
+         </p>
+         <input type="text" value="" id="dataToSend"/><input type="button" value="send" onClick="javascript:sendDataToServer()" />
+      </div>
+
+      <div id="log">
+
+      </div>
+   </body>
+	
+</html>
