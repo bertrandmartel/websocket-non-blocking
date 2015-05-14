@@ -28,6 +28,7 @@
 #include <QDebug>
 #include "string"
 #include <sys/param.h>
+#include "ClientSockethandler.h"
 
 using namespace std;
 
@@ -55,7 +56,11 @@ int main(int argc, char *argv[])
             port = dec;
     }
 
+    ClientSocketHandler *clientHandler = new ClientSocketHandler();
+
     WebsocketServer server;
+
+    server.addClientEventListener(clientHandler);
 
     if (!server.listen(QHostAddress(ip.data()),port)) {
         qDebug() << "An error occured while initializing hope proxy server... Maybe another instance is already running on "<< ip.data() << ":" << port << endl;

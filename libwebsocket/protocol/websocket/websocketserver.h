@@ -9,61 +9,154 @@
 #include <QSslSocket>
 #include "protocol/inter/http/httpconsumer.h"
 #include "protocol/http/httpdecoder.h"
-#include "clientsocketobj.h"
+#include "clientSocket.h"
 #include "QSslCertificate"
 #include "QList"
 #include "QSslKey"
+#include "IClientEventListener.h"
 
+/**
+ * @brief The WebsocketServer class
+ *      Websocket server main process class
+ *
+ * <ul>
+ *  <li>manage incoming connections</li>
+ *  <li>manage socket encryption for SSL socket</li>
+ *  <li>manage process of incoming data from client socket</li>
+ * </ul>
+ */
 class LIBWEBSOCKETSHARED_EXPORT WebsocketServer: public QTcpServer
 {
+
     Q_OBJECT
-    public:
 
-      WebsocketServer(QObject * parent = 0);
+public:
 
-      explicit WebsocketServer(int port);
+    /**
+     * @brief WebsocketServer
+     *      websocket server build object
+     * @param parent
+     */
+    WebsocketServer(QObject * parent = 0);
 
-      static std::map<QTcpSocket*,ClientSocketObj > socketClientList;
+    /**
+    * @brief socketClientList
+    *        socket client list
+    */
+    static std::map<QTcpSocket*,ClientSocket > socketClientList;
 
-      ~WebsocketServer();
+    ~WebsocketServer();
 
-    private slots:
-        void incomingData();
-        void handleNewConnection();
-        void ready();
+    /**
+    * @brief WebsocketServer::addClientEventListener
+    *      add a client event listener to list
+    * @param clientListener
+    *      client listener
+    */
+    void addClientEventListener(IClientEventListener * clientListener);
 
-        void slot_encrypted ();
-        void slot_encryptedBytesWritten (qint64 written);
-        void slot_modeChanged (QSslSocket::SslMode mode);
-        void slot_peerVerifyError (const QSslError &);
-        void slot_sslErrors (const QList<QSslError> &);
-        void slot_connected ();
-        void slot_disconnected ();
-        void slot_error (QAbstractSocket::SocketError err);
-        void slot_hostFound ();
-        void slot_proxyAuthenticationRequired (const QNetworkProxy &, QAuthenticator *);
-        void slot_stateChanged (QAbstractSocket::SocketState state);
+private slots:
 
-    private:
+    /**
+     * @brief incomingData
+     *      slot called when data comes from client socket
+     */
+    void incomingData();
 
-        void startServerEncryption(QSslSocket* clientSocket);
+    /**
+     * @brief handleNewConnection
+     *      called when a new connection pop up
+     */
+    void handleNewConnection();
 
-        void connectSocketSignals(QTcpSocket* clientSocket);
+    /**
+     * @brief slot_connected
+     *      called when a socket connect successfully to server
+     */
+    void slot_connected ();
 
-        void closeClientSocket(QTcpSocket* socket);
+    /**
+     * @brief slot_disconnected
+     *      called when a socket disconnect from server
+     */
+    void slot_disconnected ();
 
-        //ssl certs used to encrypt ssl socket
-        QSslCertificate localCertificate;
-        QList< QSslCertificate > caCertificate;
-        QSslKey keyCertificate;
+    void ready();
 
-        httpconsumer * consumer;
+    void slot_error (QAbstractSocket::SocketError err);
+    void slot_hostFound ();
+    void slot_proxyAuthenticationRequired (const QNetworkProxy &, QAuthenticator *);
+    void slot_stateChanged (QAbstractSocket::SocketState state);
 
-        httpdecoder decoder;
+    //bunch of slots used to check different state of SSL encryption process through QTNetwork processing
+    void slot_encrypted ();
+    void slot_encryptedBytesWritten (qint64 written);
+    void slot_modeChanged (QSslSocket::SslMode mode);
+    void slot_peerVerifyError (const QSslError &);
+    void slot_sslErrors (const QList<QSslError> &);
 
-        bool debug;
+private:
 
-        bool ssl;
+    /**
+     * @brief WebsocketServer::startServerEncryption
+     *      add respective certificates for SSL encryption
+     *
+     * @param clientSocket
+     *      ssl client socket
+     */
+    void startServerEncryption(QSslSocket* clientSocket);
+
+    /**
+     * @brief WebsocketServer::connectSocketSignals
+     *      connect signals to slots : we take the maximum of slots here to manage errors quickly
+     * @param clientSocket
+     *      client socket incoming
+     */
+    void connectSocketSignals(QTcpSocket* clientSocket);
+
+    /**
+     * @brief WebsocketServer::closeClientSocket
+     *      close client socket function
+     * @param socket
+     *      client socket
+     */
+    void closeClientSocket(QTcpSocket* socket);
+
+    //ssl certs used to encrypt ssl socket
+    QSslCertificate localCertificate;
+    QList< QSslCertificate > caCertificate;
+    QSslKey keyCertificate;
+
+    /**
+     * @brief consumer
+     *      http consumer used to retrieve chunk of http frames
+     */
+    httpconsumer * consumer;
+
+    /**
+     * @brief decoder
+     *          http decoder used to decode http frames streaming
+     */
+    httpdecoder decoder;
+
+    /**
+     * @brief debug
+     *      debug state for websocket server
+     */
+    bool debug;
+
+    /**
+     * @brief ssl
+     *      define if websocket protocol must use encryption or not
+     */
+    bool ssl;
+
+    /**
+     * @brief clientEventListenerList
+     *      list of client event listener
+     */
+    std::vector<IClientEventListener*> clientEventListenerList;
+
 };
 
 

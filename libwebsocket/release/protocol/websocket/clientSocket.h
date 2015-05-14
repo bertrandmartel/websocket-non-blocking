@@ -5,8 +5,9 @@
 #include <QTcpSocket>
 #include <QList>
 #include "websocketimpl.h"
+#include "IWebsocketClient.h"
 
-class ClientSocketObj
+class ClientSocket : public IWebsocketClient
 {
 
 public:
@@ -15,7 +16,10 @@ public:
      * @brief ClientSocketObj::ClientSocketObj
      *      Build one client
      */
-    ClientSocketObj();
+    ClientSocket();
+
+
+    ~ClientSocket();
 
     /**
      * @brief ClientSocketObj::websocketParse
@@ -57,6 +61,32 @@ public:
      */
     bool isWebsocketData();
 
+    /**
+     *  close websoclet client object
+     *
+     * @return
+     * 		0 if success -1 if error
+     */
+    int close();
+
+    /**
+     * Send a message to websocket client
+     *
+     * @param string
+     * 		Message to be sent to client
+     * @return
+     *		0 if success -1 if error
+     */
+    int sendMessage(std::string message);
+
+    /**
+     * @brief setSocketClient
+     *      Define client socket for this object
+     * @param clientSocket
+     *      client socket
+     */
+    void setSocketClient(QTcpSocket * clientSocket);
+
 private:
 
     /**
@@ -70,6 +100,12 @@ private:
      *      websocket decoder object
      */
     websocketimpl websocketData;
+
+    /**
+     * @brief clientSocket
+     *      client socket
+     */
+    QTcpSocket* clientSocket;
 };
 
 #endif // CLIENTSOCKETOBJ_H

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'websocketserver.h'
 **
-** Created: Thu May 14 20:34:53 2015
+** Created: Thu May 14 23:42:00 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -34,34 +34,34 @@ static const uint qt_meta_data_WebsocketServer[] = {
       17,   16,   16,   16, 0x08,
       32,   16,   16,   16, 0x08,
       54,   16,   16,   16, 0x08,
-      62,   16,   16,   16, 0x08,
-      87,   79,   16,   16, 0x08,
-     127,  122,   16,   16, 0x08,
-     165,   16,   16,   16, 0x08,
-     197,   16,   16,   16, 0x08,
-     230,   16,   16,   16, 0x08,
-     247,   16,   16,   16, 0x08,
-     271,  267,   16,   16, 0x08,
-     312,   16,   16,   16, 0x08,
-     331,  329,   16,   16, 0x08,
-     401,  395,   16,   16, 0x08,
+      71,   16,   16,   16, 0x08,
+      91,   16,   16,   16, 0x08,
+     103,   99,   16,   16, 0x08,
+     144,   16,   16,   16, 0x08,
+     163,  161,   16,   16, 0x08,
+     233,  227,   16,   16, 0x08,
+     281,   16,   16,   16, 0x08,
+     306,  298,   16,   16, 0x08,
+     346,  341,   16,   16, 0x08,
+     384,   16,   16,   16, 0x08,
+     416,   16,   16,   16, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_WebsocketServer[] = {
     "WebsocketServer\0\0incomingData()\0"
-    "handleNewConnection()\0ready()\0"
+    "handleNewConnection()\0slot_connected()\0"
+    "slot_disconnected()\0ready()\0err\0"
+    "slot_error(QAbstractSocket::SocketError)\0"
+    "slot_hostFound()\0,\0"
+    "slot_proxyAuthenticationRequired(QNetworkProxy,QAuthenticator*)\0"
+    "state\0slot_stateChanged(QAbstractSocket::SocketState)\0"
     "slot_encrypted()\0written\0"
     "slot_encryptedBytesWritten(qint64)\0"
     "mode\0slot_modeChanged(QSslSocket::SslMode)\0"
     "slot_peerVerifyError(QSslError)\0"
     "slot_sslErrors(QList<QSslError>)\0"
-    "slot_connected()\0slot_disconnected()\0"
-    "err\0slot_error(QAbstractSocket::SocketError)\0"
-    "slot_hostFound()\0,\0"
-    "slot_proxyAuthenticationRequired(QNetworkProxy,QAuthenticator*)\0"
-    "state\0slot_stateChanged(QAbstractSocket::SocketState)\0"
 };
 
 void WebsocketServer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -72,18 +72,18 @@ void WebsocketServer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         switch (_id) {
         case 0: _t->incomingData(); break;
         case 1: _t->handleNewConnection(); break;
-        case 2: _t->ready(); break;
-        case 3: _t->slot_encrypted(); break;
-        case 4: _t->slot_encryptedBytesWritten((*reinterpret_cast< qint64(*)>(_a[1]))); break;
-        case 5: _t->slot_modeChanged((*reinterpret_cast< QSslSocket::SslMode(*)>(_a[1]))); break;
-        case 6: _t->slot_peerVerifyError((*reinterpret_cast< const QSslError(*)>(_a[1]))); break;
-        case 7: _t->slot_sslErrors((*reinterpret_cast< const QList<QSslError>(*)>(_a[1]))); break;
-        case 8: _t->slot_connected(); break;
-        case 9: _t->slot_disconnected(); break;
-        case 10: _t->slot_error((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 11: _t->slot_hostFound(); break;
-        case 12: _t->slot_proxyAuthenticationRequired((*reinterpret_cast< const QNetworkProxy(*)>(_a[1])),(*reinterpret_cast< QAuthenticator*(*)>(_a[2]))); break;
-        case 13: _t->slot_stateChanged((*reinterpret_cast< QAbstractSocket::SocketState(*)>(_a[1]))); break;
+        case 2: _t->slot_connected(); break;
+        case 3: _t->slot_disconnected(); break;
+        case 4: _t->ready(); break;
+        case 5: _t->slot_error((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 6: _t->slot_hostFound(); break;
+        case 7: _t->slot_proxyAuthenticationRequired((*reinterpret_cast< const QNetworkProxy(*)>(_a[1])),(*reinterpret_cast< QAuthenticator*(*)>(_a[2]))); break;
+        case 8: _t->slot_stateChanged((*reinterpret_cast< QAbstractSocket::SocketState(*)>(_a[1]))); break;
+        case 9: _t->slot_encrypted(); break;
+        case 10: _t->slot_encryptedBytesWritten((*reinterpret_cast< qint64(*)>(_a[1]))); break;
+        case 11: _t->slot_modeChanged((*reinterpret_cast< QSslSocket::SslMode(*)>(_a[1]))); break;
+        case 12: _t->slot_peerVerifyError((*reinterpret_cast< const QSslError(*)>(_a[1]))); break;
+        case 13: _t->slot_sslErrors((*reinterpret_cast< const QList<QSslError>(*)>(_a[1]))); break;
         default: ;
         }
     }

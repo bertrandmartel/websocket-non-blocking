@@ -26,7 +26,7 @@
 #include "protocol/inter/http/httpconsumer.h"
 #include "string"
 #include "websockethandshake.h"
-#include "clientsocketobj.h"
+#include "clientSocket.h"
 #include "utils/stringutils.h"
 
 using namespace std;
@@ -35,7 +35,7 @@ using namespace std;
  * @brief WebsocketServer::socketClientList
  *      static list featuring all socket client connected to server
  */
-std::map<QTcpSocket*,ClientSocketObj > WebsocketServer::socketClientList;
+std::map<QTcpSocket*,ClientSocket > WebsocketServer::socketClientList;
 
 /**
  * @brief WebsocketServer::WebsocketServer
@@ -150,7 +150,14 @@ void WebsocketServer::slot_disconnected()
     if (debug)
         qDebug() <<  "slot_disconnected() : Socket disconnected..." << endl;
 
-    QTcpSocket *client = qobject_cast<QTcpSocket *>(sender());
+     QTcpSocket *client = qobject_cast<QTcpSocket *>(sender());
+
+
+    //notify closing socket
+    for (unsigned int i = 0; i  < this->clientEventListenerList.size();i++)
+    {
+        this->clientEventListenerList.at(i)->onClientClose(socketClientList[client]);
+    }
 
     if (!client)
         return;
@@ -246,13 +253,16 @@ WebsocketServer::~WebsocketServer()
  */
 void WebsocketServer::incomingData()
 {
+
     QTcpSocket *clientSocket = qobject_cast<QTcpSocket *>(sender());
 
     //we manage socket client object from static list (thats where we store client)
-    ClientSocketObj obj =WebsocketServer::socketClientList[clientSocket];
+    ClientSocket obj =WebsocketServer::socketClientList[clientSocket];
 
     //set socket as open (it doesnt mean that websocket is open only the socket)
     obj.setOpen(true);
+
+    obj.setSocketClient(clientSocket);
 
     // check if websocket protocol has already been upgraded (websocket data input)
     if (obj.isWebsocketData())
@@ -270,11 +280,12 @@ void WebsocketServer::incomingData()
         {
             //manage messages
             for (int i = 0 ; i< action.size();i++)
-                cout << "message n°"<< i << " received : " << action.at(i).data() << endl;
-
-            WebSocketMessage response= WebSocketMessage("Hello I'm websocket server !");
-            clientSocket->write(response.buildMessage());
-            clientSocket->flush();
+            {
+                for (unsigned int i = 0; i  < this->clientEventListenerList.size();i++)
+                {
+                    this->clientEventListenerList.at(i)->onMessageReceivedFromClient(socketClientList[clientSocket],action.at(i));
+                }
+            }
         }
     }
     else
@@ -305,6 +316,10 @@ void WebsocketServer::incomingData()
                         os.flush();
 
                         obj.setWebsocketState(true);
+                        for (unsigned int i = 0; i  < this->clientEventListenerList.size();i++)
+                        {
+                            this->clientEventListenerList.at(i)->onClientConnection(socketClientList[clientSocket]);
+                        }
                     }
 
                     //last element of http frame must be removed to avoid to be popped next time we process frames
@@ -328,6 +343,17 @@ void WebsocketServer::incomingData()
 
     // we store pointer to client socket to be reused at any time
     socketClientList[clientSocket]= obj;
+}
+
+/**
+ * @brief WebsocketServer::addClientEventListener
+ *      add a client event listener to list
+ * @param clientListener
+ *      client listener
+ */
+void WebsocketServer::addClientEventListener(IClientEventListener *clientListener)
+{
+    this->clientEventListenerList.push_back(clientListener);
 }
 
 /**

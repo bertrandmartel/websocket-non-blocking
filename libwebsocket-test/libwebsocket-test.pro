@@ -21,7 +21,10 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    ClientSocketHandler.cpp
+
+HEADERS += ClientSockethandler.h
 
 INCLUDEPATH += $$PWD/../lib
 
