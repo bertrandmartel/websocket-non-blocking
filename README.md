@@ -60,10 +60,10 @@ You can add library path to LD_LIBRARY_PATH variable for a quick run :
 
 => You have now a complete websocket chat between C++ websocket server <-> javascript client in websocket 
 
-![alt tag](https://raw.github.com/akinaru/websocket-java/master/exemples/readme_images/clientSide.png)
+![alt tag](exemples/readme_images/clientSide.png)
 
 
-![alt tag](https://raw.github.com/akinaru/websocket-java/master/exemples/readme_images/serverSide.png)
+![alt tag](exemples/readme_images/serverSide.png)
 <hr/>
 
 * Project is Qt4 compliant
