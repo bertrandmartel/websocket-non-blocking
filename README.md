@@ -45,7 +45,7 @@ From /libwesocket-test/release folder :
 
 The following will open a websocket on port 4242 (default port value for my exemple)
 
-``./libwebsocket-test 127.0.0.1 4343``
+``./libwebsocket-test 127.0.0.1 4242``
 
 You can add library path to LD_LIBRARY_PATH variable for a quick run :
 
