@@ -1,3 +1,15 @@
+/**
+    websocketserver.h
+
+    Websocket server main process class
+
+    manage incoming connections
+    manage socket encryption for SSL socket
+    manage process of incoming data from client socket
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef WEBSOCKETSERVER_H
 #define WEBSOCKETSERVER_H
 

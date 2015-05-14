@@ -1,3 +1,11 @@
+/**
+    websockethandshake.cpp
+
+    manage websocket handshake process
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #include "websockethandshake.h"
 #include "string"
 #include "crypto/sha1.h"

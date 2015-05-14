@@ -1,3 +1,10 @@
+/**
+    ClientSocketHandler.cpp
+    Client socket managing event handler
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #include "ClientSockethandler.h"
 
 #include "protocol/websocket/IWebsocketClient.h"

@@ -1,3 +1,11 @@
+/**
+    websocketmessage.h
+
+    generic websocket message
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef WEBSOCKETMESSAGE_H
 #define WEBSOCKETMESSAGE_H
 

@@ -1,3 +1,11 @@
+/**
+    clientsocket.h
+
+    websocket client object featuring one physical websocket connection
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef CLIENTSOCKETOBJ_H
 #define CLIENTSOCKETOBJ_H
 

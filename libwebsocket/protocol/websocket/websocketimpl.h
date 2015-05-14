@@ -21,6 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+/**
+    websocketimpl.h
+
+    Websocket protocol decoder
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef WEBSOCKETIMPL_H
 #define WEBSOCKETIMPL_H
 

@@ -21,6 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+/**
+    main.cpp
+
+    Main test programm
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #include <QCoreApplication>
 #include <protocol/websocket/websocketserver.h>
 #include <iostream>

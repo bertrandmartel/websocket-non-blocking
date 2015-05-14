@@ -1,3 +1,11 @@
+/**
+    websockethandshake.h
+
+    manage websocket handshake process
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef WEBSOCKETHANDSHAKE_H
 #define WEBSOCKETHANDSHAKE_H
 

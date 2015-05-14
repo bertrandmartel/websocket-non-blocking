@@ -1,3 +1,11 @@
+/**
+    clientsocket.cpp
+
+    websocket client object featuring one physical websocket connection
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #include "clientSocket.h"
 
 #include <QTcpSocket>

@@ -1,3 +1,11 @@
+/**
+    websocketprotocol.h
+
+    Websocket protocol constants see https://tools.ietf.org/html/rfc6455
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef WEBSOCKETPROTOCOL_H
 #define WEBSOCKETPROTOCOL_H
 

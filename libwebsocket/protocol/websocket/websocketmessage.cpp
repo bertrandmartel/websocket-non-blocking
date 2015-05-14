@@ -21,6 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+/**
+    websocketmessage.cpp
+
+    generic websocket message
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #include "websocketmessage.h"
 #include <QByteArray>
 #include "websocketprotocol.h"

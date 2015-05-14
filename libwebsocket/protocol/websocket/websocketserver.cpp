@@ -21,6 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+/**
+    websocketserver.cpp
+
+    Websocket server main process class
+
+    manage incoming connections
+    manage socket encryption for SSL socket
+    manage process of incoming data from client socket
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #include "websocketserver.h"
 #include "iostream"
 #include "protocol/inter/http/httpconsumer.h"

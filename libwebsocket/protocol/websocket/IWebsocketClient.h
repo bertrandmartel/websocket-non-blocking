@@ -1,3 +1,11 @@
+/**
+    IWebsocketClient.h
+
+    Define generic template for websocket client socket
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef IWEBSOCKETCLIENT_H
 #define IWEBSOCKETCLIENT_H
 #include "string"

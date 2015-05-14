@@ -1,3 +1,10 @@
+/**
+    ClientSocketHandler.h
+    Client socket managing event handler
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef CLIENTSOCKETHANDLER_H
 #define CLIENTSOCKETHANDLER_H
 #include "protocol/websocket/IClientEventListener.h"
