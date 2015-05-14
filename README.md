@@ -27,9 +27,30 @@ Specifying your own ip / port
 
 <b>How to monitor my clients connected to server ?</b>
 
-Just add a Listener to server object. You have 3 callbacks that will notify you on client connection change and arrival of client messages
+Add an instance of ``ClientSocketHandler`` you can import with ``#include "ClientSockethandler.h"`` :
 
-TODO : add an exemple
+``ClientSocketHandler *clientHandler = new ClientSocketHandler();``
+
+Just add this listener to server object. 
+
+``server.addClientEventListener(clientHandler);``
+
+In this ``ClientSocketHandler`` you have 3 callbacks that will notify you on client connection change and arrival of client messages :
+
+* ``void onClientClose(IWebsocketClient &client);`` notify when client socket close
+* ``void onClientConnection(IWebsocketClient &client);`` notify when client socket connect to server
+* ``void onMessageReceivedFromClient(IWebsocketClient &client,std::string message);`` notify when a socket client send a message to you
+
+You can send a message back with ``IWebsocketClient`` sent from the same callback with ``sendMessage(std::string textToSend)`` method :
+
+```
+void ClientSocketHandler::onMessageReceivedFromClient(IWebsocketClient &client,string message)
+{
+    cout << "Client socket message received : " << message.data() << endl;
+
+    client.sendMessage("OK I received your message !");
+}
+```
 
 <hr/>
 
