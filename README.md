@@ -5,7 +5,6 @@ http://akinaru.github.io/websocket-non-blocking-cpp/
 
 Websocket non-blocking Server implementation using QTNetwork framework (QT4)
 
-
 <i>Last update 16/05/2015</i>
 
 * [16/05/2015] add SSL/TLS support
@@ -15,7 +14,7 @@ Websocket non-blocking Server implementation using QTNetwork framework (QT4)
 
 You will find : 
 * source in ./libwebsocket folder
-* test project with secured and unsecured JS websocket client exemples featuring interactions with websocket server
+* test project with secured and unsecured JS websocket client exemples featuring interactions with websocket server in ./libwebsocket-test folder
 
 <hr/>
 
@@ -57,12 +56,6 @@ void ClientSocketHandler::onMessageReceivedFromClient(IWebsocketClient &client,s
     client.sendMessage("OK I received your message !");
 }
 ```
-
-<hr/>
-
-<b>How to close my websocket server ?</b>
-
-``server.close();``
 
 <hr/>
 
@@ -114,11 +107,40 @@ Both Chrome and Firefox need to MANUALLY add the certificate (in a popup) so put
 
 Just load your URL with "https" : https://127.0.0.1:8443 . Browser will prompt you to accept the certificates and it will probably solve your connection error.
 
+<b>Browser tested</b>
+
+This has been tested on following browser : 
+* Chrome
+* Chromium
+* Firefox
+
 <hr/>
 
-<b>Certificates</b>
+<b>Debugging SSL connection error</b>
 
-Certs are in libwesocket-test/certs folder, you will find server and ca cert build with easy-rsa (https://openvpn.net/index.php/open-source/documentation/miscellaneous/77-rsa-key-management.html)
+I recommmend using openssl command line tool to debug ssl connection : 
+
+``openssl s_client -connect 127.0.0.1:8443``
+
+<hr/>
+
+<b>Server-Client key/cert generation</b>
+
+Certs are in libwesocket-test/certs folder, you will find server,client and ca cert build with easy-rsa :
+
+https://github.com/OpenVPN/easy-rsa
+
+With last release of easy-rsa, you can build your own key with the following : 
+
+* ``./build-ca`` : generate a new CA for you
+* ``./build-server-full myServer`` : will build for you public cert and private cert signed with CA for server
+* ``./build-client-full myClient`` : will build for you public cert and private cert signed with CA for client
+
+<hr/>
+
+<b>How to close my websocket server ?</b>
+
+``server.close();``
 
 <hr/>
 
@@ -143,10 +165,10 @@ You can add library path to LD_LIBRARY_PATH variable for a quick run :
 
 => You have now a complete websocket chat between C++ websocket server <-> javascript client in websocket 
 
-![alt tag](exemples/readme_images/clientSide.png)
+![client side](exemples/readme_images/clientSide.png)
 
 
-![alt tag](exemples/readme_images/serverSide.png)
+![server side](exemples/readme_images/serverSide.png)
 <hr/>
 
 * Project is Qt4 compliant
