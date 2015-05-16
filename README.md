@@ -165,10 +165,10 @@ You can add library path to LD_LIBRARY_PATH variable for a quick run :
 
 => You have now a complete websocket chat between C++ websocket server <-> javascript client in websocket 
 
-![client side](exemples/readme_images/clientSide.png)
+![client side](https://raw.github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/clientSide.png)
 
 
-![server side](exemples/readme_images/serverSide.png)
+![server side](https://raw.github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/serverSide.png)
 <hr/>
 
 * Project is Qt4 compliant
