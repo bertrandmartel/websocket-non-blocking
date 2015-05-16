@@ -8,8 +8,8 @@ Websocket non-blocking Server implementation using QTNetwork framework (QT4)
 
 <i>Last update 16/05/2015</i>
 
-* [14/05/2015] add Client event listener
 * [16/05/2015] add SSL/TLS support
+* [14/05/2015] add Client event listener
 
 <hr/>
 
