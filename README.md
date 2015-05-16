@@ -120,6 +120,15 @@ Just load your URL with "https" : https://127.0.0.1:8443 . Browser will prompt y
 
 Certs are in libwesocket-test/certs folder, you will find server and ca cert build with easy-rsa (https://openvpn.net/index.php/open-source/documentation/miscellaneous/77-rsa-key-management.html)
 
+Exemple certificates variables in test project :
+
+```
+#define PUBLIC_CERT       "~/websocket-non-blocking/libwebsocket-test/certs/server/server.crt"
+#define PRIVATE_CERT      "~/websocket-non-blocking/libwebsocket-test/certs/server/server.key"
+#define CA_CERTS          "~/websocket-non-blocking/libwebsocket-test/certs/ca.crt"
+#define PRIVATE_CERT_PASS "12345"
+```
+in main.cpp
 <hr/>
 
 <b>COMMAND LINE SYNTAX</b> 
