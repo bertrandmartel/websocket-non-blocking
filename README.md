@@ -105,7 +105,7 @@ Specifying your own ip / port
 
 <i>Bad certificate | Unknown CA errors</i>
 
-This could mean you didn't import your not-trusted-CA certificate into your browser.
+This could mean you didn't import your not-trusted-CA certificate into your browser. I recommend to import client.p12 file in libwebsocket-test/certs/client folder to your browser
 
 <i>The remote host closed the connection</i>
 
@@ -114,6 +114,7 @@ Both Chrome and Firefox need to MANUALLY add the certificate (in a popup) so put
 
 Just load your URL with "https" : https://127.0.0.1:8443 . Browser will prompt you to accept the certificates and it will probably solve your connection error.
 
+Note : if you cancelled the operation when pop up you may have to close/reopen your browser and try again to be prompted again
 <hr/>
 
 <b>Certificates</b>
