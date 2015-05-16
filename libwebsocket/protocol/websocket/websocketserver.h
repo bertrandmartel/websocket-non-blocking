@@ -26,6 +26,7 @@
 #include "QList"
 #include "QSslKey"
 #include "IClientEventListener.h"
+#include <QtCore/QQueue>
 
 /**
  * @brief The WebsocketServer class
@@ -55,7 +56,7 @@ public:
     * @brief socketClientList
     *        socket client list
     */
-    static std::map<QTcpSocket*,ClientSocket > socketClientList;
+    static std::map<QSslSocket*,ClientSocket > socketClientList;
 
     ~WebsocketServer();
 
@@ -66,6 +67,37 @@ public:
     *      client listener
     */
     void addClientEventListener(IClientEventListener * clientListener);
+
+    /**
+     * @brief WebsocketServer::setSSL
+     *      set websocket server to secured Websocket server
+     * @param use_ssl
+     */
+    void setSSL(bool use_ssl);
+
+    /**
+     * @brief WebsocketServer::setPublicCert
+     *      set public server cert
+     * @param cert
+     *      public certificate
+     */
+    void setPublicCert(QSslCertificate cert);
+
+    /**
+     * @brief WebsocketServer::setCaCert
+     *      set certification authoritycert
+     * @param cert
+     *      certification authority cert
+     */
+    void setCaCert(QList< QSslCertificate > cert);
+
+    /**
+     * @brief WebsocketServer::setPrivateCert
+     *      set private certificate
+     * @param cert
+     *      private certificate
+     */
+    void setPrivateCert(QSslKey key);
 
 private slots:
 
@@ -110,6 +142,20 @@ private slots:
 private:
 
     /**
+     * @brief nextPendingConnection
+     *      overidde of next pending connection for queuing socket in a list
+     * @return
+     */
+    QSslSocket* nextPendingConnection();
+
+    /**
+     * @brief incomingConnection
+     *      new connection has come
+     * @param socketDescriptor
+     */
+    void incomingConnection(int socketDescriptor);
+
+    /**
      * @brief WebsocketServer::startServerEncryption
      *      add respective certificates for SSL encryption
      *
@@ -124,7 +170,7 @@ private:
      * @param clientSocket
      *      client socket incoming
      */
-    void connectSocketSignals(QTcpSocket* clientSocket);
+    void connectSocketSignals(QSslSocket* clientSocket);
 
     /**
      * @brief WebsocketServer::closeClientSocket
@@ -132,11 +178,26 @@ private:
      * @param socket
      *      client socket
      */
-    void closeClientSocket(QTcpSocket* socket);
+    void closeClientSocket(QSslSocket* socket);
 
     //ssl certs used to encrypt ssl socket
+
+    /**
+     * @brief localCertificate
+     *      public certificate
+     */
     QSslCertificate localCertificate;
+
+    /**
+     * @brief caCertificate
+     *      certification authority list of certificates
+     */
     QList< QSslCertificate > caCertificate;
+
+    /**
+     * @brief keyCertificate
+     *      private certificate
+     */
     QSslKey keyCertificate;
 
     /**
@@ -169,6 +230,11 @@ private:
      */
     std::vector<IClientEventListener*> clientEventListenerList;
 
+    /**
+     * @brief queue
+     *      used to store connection in a list
+     */
+    QQueue<QSslSocket*> queue;
 };
 
 

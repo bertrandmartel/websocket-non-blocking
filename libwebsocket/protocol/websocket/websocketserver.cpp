@@ -40,6 +40,7 @@
 #include "websockethandshake.h"
 #include "clientSocket.h"
 #include "utils/stringutils.h"
+#include "QtGlobal"
 
 using namespace std;
 
@@ -47,7 +48,7 @@ using namespace std;
  * @brief WebsocketServer::socketClientList
  *      static list featuring all socket client connected to server
  */
-std::map<QTcpSocket*,ClientSocket > WebsocketServer::socketClientList;
+std::map<QSslSocket*,ClientSocket > WebsocketServer::socketClientList;
 
 /**
  * @brief WebsocketServer::WebsocketServer
@@ -66,17 +67,63 @@ WebsocketServer::WebsocketServer(QObject* parent): QTcpServer(parent)
 }
 
 /**
+ * @brief WebsocketServer::setSSL
+ *      set websocket server to secured Websocket server
+ * @param use_ssl
+ */
+void WebsocketServer::setSSL(bool use_ssl)
+{
+    ssl=use_ssl;
+}
+
+/**
+ * @brief WebsocketServer::setPublicCert
+ *      set public server cert
+ * @param cert
+ *      public certificate
+ */
+void WebsocketServer::setPublicCert(QSslCertificate cert)
+{
+    localCertificate=cert;
+}
+
+/**
+ * @brief WebsocketServer::setCaCert
+ *      set certification authoritycert
+ * @param cert
+ *      certification authority cert
+ */
+void WebsocketServer::setCaCert(QList< QSslCertificate > cert)
+{
+    caCertificate=cert;
+}
+
+/**
+ * @brief WebsocketServer::setPrivateCert
+ *      set private certificate
+ * @param cert
+ *      private certificate
+ */
+void WebsocketServer::setPrivateCert(QSslKey key)
+{
+    keyCertificate=key;
+}
+
+/**
  * @brief WebsocketServer::handleNewConnection
  *      a new connection has come to server
  */
 void WebsocketServer::handleNewConnection()
 {
-    QTcpSocket *clientSocket = qobject_cast<QTcpSocket *>(sender());
+    QSslSocket *clientSocket;
+
+    clientSocket = qobject_cast<QSslSocket *>(sender());
 
     if (debug)
         qDebug() << "New connection detected..." << endl;
 
     clientSocket = this->nextPendingConnection();
+
     if (!clientSocket) {
         qWarning("ERROR => not enough memory to create new QSslSocket");
         return;
@@ -87,7 +134,32 @@ void WebsocketServer::handleNewConnection()
 
     // only for ssl encryption
     if (ssl)
-        startServerEncryption((QSslSocket*) clientSocket);
+        startServerEncryption((QSslSocket *) clientSocket);
+}
+
+void WebsocketServer::incomingConnection(int socketDescriptor)
+{
+    if (debug)
+        qDebug("incomingConnection(%d)", (int)socketDescriptor);
+
+    QSslSocket *newSocket = new QSslSocket(this);
+
+    if(!newSocket->setSocketDescriptor(socketDescriptor))
+        return;
+
+    queue.enqueue(newSocket);
+
+}
+
+QSslSocket* WebsocketServer::nextPendingConnection()
+{
+    if (debug)
+        cout << "pending connection" << endl;
+
+    if(queue.isEmpty())
+        return 0;
+    else
+        return queue.dequeue();
 }
 
 /**
@@ -96,18 +168,8 @@ void WebsocketServer::handleNewConnection()
  * @param clientSocket
  *      client socket incoming
  */
-void WebsocketServer::connectSocketSignals (QTcpSocket* clientSocket)
+void WebsocketServer::connectSocketSignals (QSslSocket* clientSocket)
 {
-    //slots for ssl cert handshake process and error monitoring
-    if (ssl)
-    {
-        connect(clientSocket, SIGNAL(encrypted())                        ,this, SLOT(slot_encrypted()));
-        connect(clientSocket, SIGNAL(encryptedBytesWritten(qint64))      ,this, SLOT(slot_encryptedBytesWritten(qint64)));
-        connect(clientSocket, SIGNAL(modeChanged(QSslSocket::SslMode))   ,this, SLOT(slot_modeChanged(QSslSocket::SslMode)));
-        connect(clientSocket, SIGNAL(peerVerifyError(const QSslError &)) ,this, SLOT(slot_peerVerifyError (const QSslError &)));
-        connect(clientSocket, SIGNAL(sslErrors(const QList<QSslError> &)),this, SLOT(slot_sslErrors(const QList<QSslError> &)));
-    }
-
     //slots for all socket types
     connect(clientSocket, SIGNAL(readyRead())                        ,this, SLOT(incomingData()));
     connect(clientSocket, SIGNAL(connected())                        ,this, SLOT(slot_connected()));
@@ -116,6 +178,15 @@ void WebsocketServer::connectSocketSignals (QTcpSocket* clientSocket)
     connect(clientSocket, SIGNAL(hostFound())                        ,this, SLOT(slot_hostFound()));
     connect(clientSocket, SIGNAL(proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *)),this, SLOT(slot_proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *)));
     connect(clientSocket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),this, SLOT(slot_stateChanged(QAbstractSocket::SocketState)));
+    if (ssl)
+    {
+        //slots for ssl cert handshake process and error monitoring
+        connect(clientSocket, SIGNAL(encrypted())                        ,this, SLOT(slot_encrypted()));
+        connect(clientSocket, SIGNAL(encryptedBytesWritten(qint64))      ,this, SLOT(slot_encryptedBytesWritten(qint64)));
+        connect(clientSocket, SIGNAL(modeChanged(QSslSocket::SslMode))   ,this, SLOT(slot_modeChanged(QSslSocket::SslMode)));
+        connect(clientSocket, SIGNAL(peerVerifyError(const QSslError &)) ,this, SLOT(slot_peerVerifyError (const QSslError &)));
+        connect(clientSocket, SIGNAL(sslErrors(const QList<QSslError> &)),this, SLOT(slot_sslErrors(const QList<QSslError> &)));
+    }
 }
 
 /**
@@ -127,11 +198,19 @@ void WebsocketServer::connectSocketSignals (QTcpSocket* clientSocket)
  */
 void WebsocketServer::startServerEncryption (QSslSocket* clientSocket)
 {
+    if (keyCertificate.isNull() || localCertificate.isNull() || caCertificate.isEmpty())
+    {
+        cout << "Error invalid certificates" << endl;
+        clientSocket->close();
+        return;
+    }
+
     if (debug)
         cout << "server encryption" << endl;
 
     if (debug)
         qDebug("setting private key...");
+
     clientSocket->setPrivateKey(keyCertificate);
 
     if (debug)
@@ -162,7 +241,7 @@ void WebsocketServer::slot_disconnected()
     if (debug)
         qDebug() <<  "slot_disconnected() : Socket disconnected..." << endl;
 
-     QTcpSocket *client = qobject_cast<QTcpSocket *>(sender());
+     QSslSocket *client = qobject_cast<QSslSocket *>(sender());
 
 
     //notify closing socket
@@ -222,7 +301,7 @@ void WebsocketServer::slot_connected ()
 
 void WebsocketServer::slot_error (QAbstractSocket::SocketError err)
 {
-    QTcpSocket *client = qobject_cast<QTcpSocket *>(sender());
+    QSslSocket *client = qobject_cast<QSslSocket *>(sender());
 
     if (debug)
         cout << "received error !" << endl;
@@ -265,8 +344,7 @@ WebsocketServer::~WebsocketServer()
  */
 void WebsocketServer::incomingData()
 {
-
-    QTcpSocket *clientSocket = qobject_cast<QTcpSocket *>(sender());
+    QSslSocket *clientSocket = qobject_cast<QSslSocket *>(sender());
 
     //we manage socket client object from static list (thats where we store client)
     ClientSocket obj =WebsocketServer::socketClientList[clientSocket];
@@ -374,7 +452,7 @@ void WebsocketServer::addClientEventListener(IClientEventListener *clientListene
  * @param socket
  *      client socket
  */
-void WebsocketServer::closeClientSocket(QTcpSocket* socket)
+void WebsocketServer::closeClientSocket(QSslSocket* socket)
 {
     cout << "closing socket..." << endl;
 
@@ -382,7 +460,7 @@ void WebsocketServer::closeClientSocket(QTcpSocket* socket)
         socket->close();
 
     //manage unconnected state
-    if (socket->state() == QTcpSocket::UnconnectedState) {
+    if (socket->state() == QSslSocket::UnconnectedState) {
          delete socket;
          cout << "Connection closed" << endl;
     }

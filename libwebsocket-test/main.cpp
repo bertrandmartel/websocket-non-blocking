@@ -37,11 +37,18 @@
 #include "string"
 #include <sys/param.h>
 #include "ClientSockethandler.h"
+#include "SslHandler.h"
+
+#define PUBLIC_CERT       "/home/abathur/Bureau/open_source/websocketcpp/libwebsocket-test/certs/server/server.crt"
+#define PRIVATE_CERT      "/home/abathur/Bureau/open_source/websocketcpp/libwebsocket-test/certs/server/server.key"
+#define CA_CERTS          "/home/abathur/Bureau/open_source/websocketcpp/libwebsocket-test/certs/ca.crt"
+#define PRIVATE_CERT_PASS "12345"
 
 using namespace std;
 
-static int port = 4242;
+static int port = 8443;
 static string ip="127.0.0.1";
+static bool useSSL = true;
 
 int main(int argc, char *argv[])
 {
@@ -66,7 +73,21 @@ int main(int argc, char *argv[])
 
     ClientSocketHandler *clientHandler = new ClientSocketHandler();
 
+    //instance of websocket server
     WebsocketServer server;
+
+    if (useSSL)
+    {
+        //set secured websocket server
+        server.setSSL(true);
+
+        cout << "setting server certs ..." << endl;
+
+        //set public / private and certification authority list into websocket server object
+        server.setPublicCert(SslHandler::retrieveCertFromFile(PUBLIC_CERT));
+        server.setPrivateCert(SslHandler::retrieveKeyCertFile(PRIVATE_CERT,PRIVATE_CERT_PASS));
+        server.setCaCert(SslHandler::retrieveveCaCertListFromFile(CA_CERTS));
+    }
 
     server.addClientEventListener(clientHandler);
 

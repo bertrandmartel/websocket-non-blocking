@@ -1,3 +1,12 @@
+/**
+    websocketopcode.h
+
+    Websocket protocol opcodes featuring websocket frame types
+    see https://tools.ietf.org/html/rfc6455
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef WEBSOCKETOPCODE_H
 #define WEBSOCKETOPCODE_H
 

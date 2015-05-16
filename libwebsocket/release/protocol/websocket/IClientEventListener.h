@@ -1,3 +1,11 @@
+/**
+    IClientEventListener.h
+
+    Define all client socket event that can happen and that will pop event in class that will inherit this one
+
+    @author Bertrand Martel
+    @version 1.0
+*/
 #ifndef ICLIENTEVENTLISTENER_H
 #define ICLIENTEVENTLISTENER_H
 
