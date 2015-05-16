@@ -2,3 +2,5 @@
 build-libwebsocket-test-Desktop-Release/**
 build-libwebsocket-test-Desktop-Debug/*
 *.o
+libwebsocket/liwebsocket-test.pro.user
+libwesocket-test/liwebsocket.pro.user
