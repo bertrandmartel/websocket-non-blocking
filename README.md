@@ -2,8 +2,9 @@
 
 http://akinaru.github.io/websocket-non-blocking-cpp/
 
-
 Websocket non-blocking Server implementation using QTNetwork framework (QT4)
+
+This project uses this http streaming decoder : http://akinaru.github.io/http-streaming-decoder-cpp/
 
 <i>Last update 16/05/2015</i>
 
