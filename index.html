@@ -20,19 +20,26 @@
 
     <section class="main-content">
       <h1>
-<a id="websocket-non-blocking-server-implementation-in-c" class="anchor" href="#websocket-non-blocking-server-implementation-in-c" aria-hidden="true"><span class="octicon octicon-link"></span></a>Websocket non-blocking Server implementation in C++</h1>
+<a id="websocket-non-blocking-c-server-implementation" class="anchor" href="#websocket-non-blocking-c-server-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>websocket non-blocking C++ Server implementation</h1>
 
 <p><a href="http://akinaru.github.io/websocket-non-blocking-cpp/">http://akinaru.github.io/websocket-non-blocking-cpp/</a></p>
 
-<p><i>Last update 14/05/2015</i></p>
-
 <p>Websocket non-blocking Server implementation using QTNetwork framework (QT4)</p>
 
-<p>You will find source in ./libwebsocket folder</p>
+<p><i>Last update 16/05/2015</i></p>
 
 <ul>
-<li>Very easy to use</li>
-<li>A sample is provided to launch a Websocket server and test with a Javascript Client in exemples/js folder</li>
+<li>[16/05/2015] add SSL/TLS support</li>
+<li>[14/05/2015] add Client event listener</li>
+</ul>
+
+<hr>
+
+<p>You will find : </p>
+
+<ul>
+<li>source in ./libwebsocket folder</li>
+<li>test project with secured and unsecured JS websocket client exemples featuring interactions with websocket server</li>
 </ul>
 
 <hr>
@@ -50,9 +57,34 @@ bool success = server.listen(QHostAddress(ip),port)
 
 <p><b>How to monitor my clients connected to server ?</b></p>
 
-<p>Just add a Listener to server object. You have 3 callbacks that will notify you on client connection change and arrival of client messages</p>
+<p>Add an instance of <code>ClientSocketHandler</code> you can import with <code>#include "ClientSockethandler.h"</code> :</p>
 
-<p>TODO : add an exemple</p>
+<p><code>ClientSocketHandler *clientHandler = new ClientSocketHandler();</code></p>
+
+<p>Just add this listener to server object. </p>
+
+<p><code>server.addClientEventListener(clientHandler);</code></p>
+
+<p>In this <code>ClientSocketHandler</code> you have 3 callbacks that will notify you on client connection change and arrival of client messages :</p>
+
+<ul>
+<li>
+<code>void onClientClose(IWebsocketClient &amp;client);</code> notify when client socket close</li>
+<li>
+<code>void onClientConnection(IWebsocketClient &amp;client);</code> notify when client socket connect to server</li>
+<li>
+<code>void onMessageReceivedFromClient(IWebsocketClient &amp;client,std::string message);</code> notify when a socket client send a message to you</li>
+</ul>
+
+<p>You can send a message back with <code>IWebsocketClient</code> sent from the same callback with <code>sendMessage(std::string textToSend)</code> method :</p>
+
+<pre><code>void ClientSocketHandler::onMessageReceivedFromClient(IWebsocketClient &amp;client,string message)
+{
+    cout &lt;&lt; "Client socket message received : " &lt;&lt; message.data() &lt;&lt; endl;
+
+    client.sendMessage("OK I received your message !");
+}
+</code></pre>
 
 <hr>
 
@@ -62,13 +94,69 @@ bool success = server.listen(QHostAddress(ip),port)
 
 <hr>
 
+<p><b>How to launch a SSL secured websocket server ?</b></p>
+
+<pre><code>WebsocketServer server;
+
+server.setSSL(true); // set SSL to true (default is false)
+
+</code></pre>
+
+<p>Then you set your public/private/ca certificates separately with respective methods : </p>
+
+<pre><code>server.setPublicCert(SslHandler::retrieveCertFromFile(PUBLIC_CERT));
+server.setPrivateCert(SslHandler::retrieveKeyCertFile(PRIVATE_CERT,PRIVATE_CERT_PASS));
+server.setCaCert(SslHandler::retrieveveCaCertListFromFile(CA_CERTS));
+</code></pre>
+
+<p>You can use static method from SslHandler in libwebsocket-test project folder</p>
+
+<ul>
+<li>public cert must be a QSslCertificate : SslHandler::retrieveCertFromFile(char * filepath)</li>
+<li>private cert must be a QSslKey : SslHandler::retrieveKeyCertFile(char * filepath,char * passKey)</li>
+<li>ca cert must be a QList of QSslCertificate : SslHandler::retrieveveCaCertListFromFile(char * filepath)</li>
+</ul>
+
+<p>Eventually add event listener as described above and start websocket server : </p>
+
+<pre><code>server.addClientEventListener(clientHandler);
+
+bool success = server.listen(QHostAddress(ip),port)
+
+</code></pre>
+
+<p>Specifying your own ip / port</p>
+
+<hr>
+
+<p><b>Troubleshooting SSL errors with local browser JS client</b> </p>
+
+<p><i>Bad certificate | Unknown CA errors</i></p>
+
+<p>This could mean you didn't import your not-trusted-CA certificate into your browser.</p>
+
+<p><i>The remote host closed the connection</i></p>
+
+<p>Usually happen when your browser closed the connection before the end of SSL handshake. If you already added your CA to your browser dont worry.
+Both Chrome and Firefox need to MANUALLY add the certificate (in a popup) so putting it in parameter menu don't change anything.</p>
+
+<p>Just load your URL with "https" : <a href="https://127.0.0.1:8443">https://127.0.0.1:8443</a> . Browser will prompt you to accept the certificates and it will probably solve your connection error.</p>
+
+<hr>
+
+<p><b>Certificates</b></p>
+
+<p>Certs are in libwesocket-test/certs folder, you will find server and ca cert build with easy-rsa (<a href="https://openvpn.net/index.php/open-source/documentation/miscellaneous/77-rsa-key-management.html">https://openvpn.net/index.php/open-source/documentation/miscellaneous/77-rsa-key-management.html</a>)</p>
+
+<hr>
+
 <p><b>COMMAND LINE SYNTAX</b> </p>
 
 <p>From /libwesocket-test/release folder : </p>
 
-<p>The following will open a websocket on port 4242 (default port value for my exemple)</p>
+<p>The following will open a websocket on port 8443 (default port value for my exemple)</p>
 
-<p><code>./libwebsocket-test 127.0.0.1 4343</code></p>
+<p><code>./libwebsocket-test 127.0.0.1 8443</code></p>
 
 <p>You can add library path to LD_LIBRARY_PATH variable for a quick run :</p>
 
@@ -79,15 +167,15 @@ bool success = server.listen(QHostAddress(ip),port)
 <p><b>Exemple with Javascript Client</b></p>
 
 <ul>
-<li>Launch the websocket server on port 4242</li>
+<li>Launch the websocket server on port 8443</li>
 <li>Open the javascript client page in ./exemples/js/ folder</li>
 </ul>
 
 <p>=&gt; You have now a complete websocket chat between C++ websocket server &lt;-&gt; javascript client in websocket </p>
 
-<p><img src="https://raw.github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/clientSide.png" alt="alt tag"></p>
+<p><img src="exemples/readme_images/clientSide.png" alt="alt tag"></p>
 
-<p><img src="https://raw.github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/serverSide.png" alt="alt tag"></p>
+<p><img src="exemples/readme_images/serverSide.png" alt="alt tag"></p>
 
 <hr>
 
