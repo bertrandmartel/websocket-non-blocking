@@ -1,4 +1,4 @@
-# Websocket non-blocking Server implementation in C++ #
+# Websocket non-blocking C++ Server implementation #
 
 http://akinaru.github.io/websocket-non-blocking-cpp/
 
