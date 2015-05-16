@@ -12,7 +12,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">websocket-non-blocking-cpp</h1>
-      <h2 class="project-tagline">Websocket non-blocking server implementation in C++</h2>
+      <h2 class="project-tagline">websocket non-blocking server implementation in C++</h2>
       <a href="https://github.com/akinaru/websocket-non-blocking-cpp" class="btn">View on GitHub</a>
       <a href="https://github.com/akinaru/websocket-non-blocking-cpp/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/akinaru/websocket-non-blocking-cpp/tarball/master" class="btn">Download .tar.gz</a>
@@ -20,7 +20,7 @@
 
     <section class="main-content">
       <h1>
-<a id="websocket-non-blocking-c-server-implementation" class="anchor" href="#websocket-non-blocking-c-server-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>websocket non-blocking C++ Server implementation</h1>
+<a id="websocket-non-blocking-c-server-implementation" class="anchor" href="#websocket-non-blocking-c-server-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Websocket non-blocking C++ Server implementation</h1>
 
 <p><a href="http://akinaru.github.io/websocket-non-blocking-cpp/">http://akinaru.github.io/websocket-non-blocking-cpp/</a></p>
 
@@ -39,7 +39,7 @@
 
 <ul>
 <li>source in ./libwebsocket folder</li>
-<li>test project with secured and unsecured JS websocket client exemples featuring interactions with websocket server</li>
+<li>test project with secured and unsecured JS websocket client exemples featuring interactions with websocket server in ./libwebsocket-test folder</li>
 </ul>
 
 <hr>
@@ -85,12 +85,6 @@ bool success = server.listen(QHostAddress(ip),port)
     client.sendMessage("OK I received your message !");
 }
 </code></pre>
-
-<hr>
-
-<p><b>How to close my websocket server ?</b></p>
-
-<p><code>server.close();</code></p>
 
 <hr>
 
@@ -142,11 +136,48 @@ Both Chrome and Firefox need to MANUALLY add the certificate (in a popup) so put
 
 <p>Just load your URL with "https" : <a href="https://127.0.0.1:8443">https://127.0.0.1:8443</a> . Browser will prompt you to accept the certificates and it will probably solve your connection error.</p>
 
+<p><b>Browser tested</b></p>
+
+<p>This has been tested on following browser : </p>
+
+<ul>
+<li>Chrome</li>
+<li>Chromium</li>
+<li>Firefox</li>
+</ul>
+
 <hr>
 
-<p><b>Certificates</b></p>
+<p><b>Debugging SSL connection error</b></p>
 
-<p>Certs are in libwesocket-test/certs folder, you will find server and ca cert build with easy-rsa (<a href="https://openvpn.net/index.php/open-source/documentation/miscellaneous/77-rsa-key-management.html">https://openvpn.net/index.php/open-source/documentation/miscellaneous/77-rsa-key-management.html</a>)</p>
+<p>I recommmend using openssl command line tool to debug ssl connection : </p>
+
+<p><code>openssl s_client -connect 127.0.0.1:8443</code></p>
+
+<hr>
+
+<p><b>Server-Client key/cert generation</b></p>
+
+<p>Certs are in libwesocket-test/certs folder, you will find server,client and ca cert build with easy-rsa :</p>
+
+<p><a href="https://github.com/OpenVPN/easy-rsa">https://github.com/OpenVPN/easy-rsa</a></p>
+
+<p>With last release of easy-rsa, you can build your own key with the following : </p>
+
+<ul>
+<li>
+<code>./build-ca</code> : generate a new CA for you</li>
+<li>
+<code>./build-server-full myServer</code> : will build for you public cert and private cert signed with CA for server</li>
+<li>
+<code>./build-client-full myClient</code> : will build for you public cert and private cert signed with CA for client</li>
+</ul>
+
+<hr>
+
+<p><b>How to close my websocket server ?</b></p>
+
+<p><code>server.close();</code></p>
 
 <hr>
 
@@ -173,9 +204,9 @@ Both Chrome and Firefox need to MANUALLY add the certificate (in a popup) so put
 
 <p>=&gt; You have now a complete websocket chat between C++ websocket server &lt;-&gt; javascript client in websocket </p>
 
-<p><img src="https://github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/clientSide.png" alt="alt tag"></p>
+<p><img src="exemples/readme_images/clientSide.png" alt="client side"></p>
 
-<p><img src="https://github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/serverSide.png" alt="alt tag"></p>
+<p><img src="exemples/readme_images/serverSide.png" alt="server side"></p>
 
 <hr>
 
