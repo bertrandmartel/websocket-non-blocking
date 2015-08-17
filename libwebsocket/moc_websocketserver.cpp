@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'websocketserver.h'
 **
-** Created: Sat May 16 05:24:03 2015
+** Created: Sat May 23 16:53:47 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_WebsocketServer[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -45,6 +45,7 @@ static const uint qt_meta_data_WebsocketServer[] = {
      346,  341,   16,   16, 0x08,
      384,   16,   16,   16, 0x08,
      416,   16,   16,   16, 0x08,
+     464,  454,  449,   16, 0x08,
 
        0        // eod
 };
@@ -61,7 +62,9 @@ static const char qt_meta_stringdata_WebsocketServer[] = {
     "slot_encryptedBytesWritten(qint64)\0"
     "mode\0slot_modeChanged(QSslSocket::SslMode)\0"
     "slot_peerVerifyError(QSslError)\0"
-    "slot_sslErrors(QList<QSslError>)\0"
+    "slot_sslErrors(QList<QSslError>)\0bool\0"
+    "frameList\0"
+    "containsHttpProcessedFrames(std::vector<Ihttpframe*>)\0"
 };
 
 void WebsocketServer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -84,6 +87,8 @@ void WebsocketServer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         case 11: _t->slot_modeChanged((*reinterpret_cast< QSslSocket::SslMode(*)>(_a[1]))); break;
         case 12: _t->slot_peerVerifyError((*reinterpret_cast< const QSslError(*)>(_a[1]))); break;
         case 13: _t->slot_sslErrors((*reinterpret_cast< const QList<QSslError>(*)>(_a[1]))); break;
+        case 14: { bool _r = _t->containsHttpProcessedFrames((*reinterpret_cast< std::vector<Ihttpframe*>(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
         default: ;
         }
     }
@@ -121,9 +126,9 @@ int WebsocketServer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 15;
     }
     return _id;
 }

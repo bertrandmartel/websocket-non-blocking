@@ -139,6 +139,8 @@ private slots:
     void slot_peerVerifyError (const QSslError &);
     void slot_sslErrors (const QList<QSslError> &);
 
+    bool containsHttpProcessedFrames(std::vector<Ihttpframe*> frameList);
+
 private:
 
     /**

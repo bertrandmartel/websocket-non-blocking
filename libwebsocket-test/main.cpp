@@ -39,9 +39,10 @@
 #include "ClientSockethandler.h"
 #include "SslHandler.h"
 
-#define PUBLIC_CERT       "~/websocket-non-blocking/libwebsocket-test/certs/server/server.crt"
-#define PRIVATE_CERT      "~/websocket-non-blocking/libwebsocket-test/certs/server/server.key"
-#define CA_CERTS          "~/websocket-non-blocking/libwebsocket-test/certs/ca.crt"
+#define ROOT_FOLDER       "/home/abathur/Bureau/open_source"
+#define PUBLIC_CERT       ROOT_FOLDER "/websocketcpp/libwebsocket-test/certs/server/server.crt"
+#define PRIVATE_CERT      ROOT_FOLDER "/websocketcpp/libwebsocket-test/certs/server/server.key"
+#define CA_CERTS          ROOT_FOLDER "/websocketcpp/libwebsocket-test/certs/ca.crt"
 #define PRIVATE_CERT_PASS "12345"
 
 using namespace std;

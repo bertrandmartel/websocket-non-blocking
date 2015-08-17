@@ -390,7 +390,7 @@ void WebsocketServer::incomingData()
             int count = consumer->getHttpFrameList().size()-1;
 
             //iterate through all http streaming frames
-            while (consumer->getHttpFrameList().size()>0)
+            while (containsHttpProcessedFrames(consumer->getHttpFrameList()))
             {
                 //take into account only http frames that have been processed successfully
                 if (consumer->getHttpFrameList().at(count)->isFinishedProcessing())
@@ -433,6 +433,25 @@ void WebsocketServer::incomingData()
 
     // we store pointer to client socket to be reused at any time
     socketClientList[clientSocket]= obj;
+}
+
+/**
+ * @brief WebsocketServer::containsHttpProcessedFrames
+ *      check if http frame list buffer already contains finished http processed frame or no
+ * @param frameList
+ *      list of http frames
+ * @return
+ */
+bool WebsocketServer::containsHttpProcessedFrames(std::vector<Ihttpframe*> frameList)
+{
+    for (int i = 0; i < frameList.size();i++)
+    {
+        if (frameList.at(i)->isFinishedProcessing())
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
