@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'websocketserver.h'
 **
-** Created: Sat May 23 16:53:47 2015
+** Created: Sat Aug 29 15:37:11 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!

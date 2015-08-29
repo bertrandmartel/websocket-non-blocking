@@ -23,6 +23,13 @@ public :
     virtual int close()= 0;
 
     /**
+     * @brief getPeerAddress
+     *      Retrieve client IP address
+     * @return
+     */
+    virtual std::string getPeerAddress()=0;
+
+    /**
      * Send a message to websocket client
      *
      * @param string

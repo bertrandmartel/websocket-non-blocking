@@ -13,13 +13,11 @@
 
 using namespace std;
 
-ClientSocketHandler::ClientSocketHandler()
-{
+ClientSocketHandler::ClientSocketHandler(){
 
 }
 
-ClientSocketHandler::~ClientSocketHandler()
-{
+ClientSocketHandler::~ClientSocketHandler(){
 
 }
 
@@ -28,9 +26,8 @@ ClientSocketHandler::~ClientSocketHandler()
  *
  * @param clientRef
  */
-void ClientSocketHandler::onClientClose(IWebsocketClient &client)
-{
-    cout << "Client socket closed" << endl;
+void ClientSocketHandler::onClientClose(IWebsocketClient &client){
+    cout << "Client socket " << client.getPeerAddress().data() << " closed" << endl;
 }
 
 /**
@@ -38,9 +35,8 @@ void ClientSocketHandler::onClientClose(IWebsocketClient &client)
  *
  * @param client
  */
-void ClientSocketHandler::onClientConnection(IWebsocketClient &client)
-{
-    cout << "Client socket opened" << endl;
+void ClientSocketHandler::onClientConnection(IWebsocketClient &client){
+    cout << "Client socket " << client.getPeerAddress().data() << " opened" << endl;
 }
 
 /**
@@ -51,9 +47,7 @@ void ClientSocketHandler::onClientConnection(IWebsocketClient &client)
  * @param message
  * 		message delivered
  */
-void ClientSocketHandler::onMessageReceivedFromClient(IWebsocketClient &client,string message)
-{
+void ClientSocketHandler::onMessageReceivedFromClient(IWebsocketClient &client,string message){
     cout << "Client socket message received : " << message.data() << endl;
-
     client.sendMessage("OK I received your message !");
 }

@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    cout << "Starting Websocket server on port " << port << endl;
+    cout << "Starting Websocket server on " <<  ip << ":" << port << endl;
 
     return a.exec();
 }

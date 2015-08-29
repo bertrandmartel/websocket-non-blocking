@@ -47,8 +47,8 @@ QSslCertificate SslHandler::retrieveCertFromFile(char * filename){
     //extract all cert in cert folder into byte array format
     QByteArray certFormatted= fileutils::readFromFile(filename);
 
-    if (strcmp(certFormatted.data(),"")==0)
-    {
+    if (strcmp(certFormatted.data(),"")==0){
+
         cout << "Invalid server certs ..." << endl;
         QSslCertificate cert;
         return cert;
@@ -60,13 +60,11 @@ QSslCertificate SslHandler::retrieveCertFromFile(char * filename){
     return cert;
 }
 
-QSslKey SslHandler::retrieveKeyCertFile(char * filename,char * certPass)
-{
+QSslKey SslHandler::retrieveKeyCertFile(char * filename,char * certPass){
     //extract all cert in cert folder into byte array format
     QByteArray certFormatted= fileutils::readFromFile(filename);
 
-    if (strcmp(certFormatted.data(),"")==0)
-    {
+    if (strcmp(certFormatted.data(),"")==0) {
         cout << "Invalid server certs ..." << endl;
         QSslKey cert;
         return cert;
@@ -92,8 +90,7 @@ QList< QSslCertificate > SslHandler::retrieveveCaCertListFromFile(char * filenam
 
     QByteArray caCert= fileutils::readFromFile(filename);
 
-    if (strcmp(caCert.data(),"")==0)
-    {
+    if (strcmp(caCert.data(),"")==0){
         cout << "Invalid server certs ..." << endl;
         return caCertificate;
     }
