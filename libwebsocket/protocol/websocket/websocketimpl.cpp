@@ -44,6 +44,7 @@ using namespace std;
  */
 websocketimpl::websocketimpl()
 {
+    debug=false;
     initWebsocket();
 }
 

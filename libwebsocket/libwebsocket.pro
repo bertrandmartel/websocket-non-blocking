@@ -5,10 +5,11 @@
 #-------------------------------------------------
 
 QT       += network
-
 QT       -= gui
 
 QMAKE_CXXFLAGS += -std=c++0x
+CONFIG+= staticlib
+CONFIG+= qt debug
 
 DESTDIR = release
 
@@ -16,8 +17,6 @@ OBJECTS_DIR=bin
 
 TARGET = websocket
 TEMPLATE = lib
-
-DEFINES += LIBWEBSOCKET_LIBRARY
 
 SOURCES += protocol/websocket/*.cpp \
            utils/*.cpp \
@@ -27,21 +26,12 @@ HEADERS += protocol/websocket/*.h \
         utils/*.h \
         crypto/*.h
 
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
-}
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/release/ -lhttpdecoder
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/debug/ -lhttpdecoder
+else:unix: LIBS += -L$$PWD/../libs/ -lhttpdecoder
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/release/ -lhttpdecoder
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/debug/ -lhttpdecoder
-else:unix: LIBS += -L$$PWD/../lib/ -lhttpdecoder
-
-INCLUDEPATH += $$PWD/../lib
-DEPENDPATH += $$PWD/../lib
+INCLUDEPATH += $$PWD/../libs
+DEPENDPATH += $$PWD/../libs
 
 QMAKE_CLEAN += -r $${PWD}/$${DESTDIR}
 

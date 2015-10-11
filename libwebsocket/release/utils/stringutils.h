@@ -46,16 +46,6 @@ public:
      */
     static std::vector<std::string> split(const std::string &s, char delim, std::vector<std::string> &elems);
 
-    /**
-     * @brief isNum
-     *      check if char * is numeric data
-     * @param s
-     *      char * input
-     * @return
-     *      true if data is numeric
-     */
-    static bool isNum(char *s);
-
     // trim from start
     static std::string& ltrim(std::string& s);
 

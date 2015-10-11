@@ -18,6 +18,7 @@ OBJECTS_DIR=bin
 
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG+= qt debug
 
 TEMPLATE = app
 
@@ -32,9 +33,6 @@ INCLUDEPATH += $$PWD/../lib
 
 QMAKE_CLEAN += -r $${PWD}/$${DESTDIR}
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/release/ -lhttpdecoder
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/debug/ -lhttpdecoder
-else:unix: LIBS += -L$$PWD/../lib/ -lhttpdecoder
 
 INCLUDEPATH += $$PWD/../
 DEPENDPATH += $$PWD/../
@@ -43,5 +41,11 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libwebsocket/release/re
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libwebsocket/release/debug/ -lwebsocket
 else:unix: LIBS += -L$$PWD/../libwebsocket/release/ -lwebsocket
 
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/ -lhttpdecoder
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/ -lhttpdecoder
+else:unix: LIBS += -L$$PWD/../libs/ -lhttpdecoder
+
 INCLUDEPATH += $$PWD/../libwebsocket/release
+INCLUDEPATH += $$PWD/../libs
 DEPENDPATH += $$PWD/../libwebsocket/release
+DEPENDPATH += $$PWD/../libs

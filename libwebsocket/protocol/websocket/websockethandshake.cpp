@@ -46,13 +46,13 @@ string websockethandshake::buildWebsocketHandshake(std::string websocketKey){
  *      http headers
  * @return
  */
-bool websockethandshake::getWebsocketHandshakeProcess(std::map<std::string,std::string> *headerMap){
+bool websockethandshake::getWebsocketHandshakeProcess(std::map<std::string,std::string> headerMap){
 
     bool upgradeHeader = false;
     bool connectionHeader = false;
     bool websocketKeyHeader = false;
 
-    for(std::map<std::string, std::string>::iterator it = (*headerMap).begin(); it != (*headerMap).end(); it++) {
+    for(std::map<std::string, std::string>::iterator it = headerMap.begin(); it != headerMap.end(); it++) {
 
         if (strcmp(it->first.c_str(),"Upgrade")==0 && strcmp(it->first.c_str(),"websocket"))
             upgradeHeader=true;

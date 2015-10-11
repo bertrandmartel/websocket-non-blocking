@@ -49,10 +49,27 @@ using namespace std;
 
 static int port = 8443;
 static string ip="127.0.0.1";
-static bool useSSL = false;
+static bool useSSL = true;
 
-int main(int argc, char *argv[])
-{
+struct CleanExit{
+
+    CleanExit() {
+
+        signal(SIGINT, &CleanExit::exitQt);
+        signal(SIGTERM, &CleanExit::exitQt);
+    }
+
+    static void exitQt(int sig) {
+
+        QCoreApplication::exit(0);
+
+    }
+};
+
+
+int main(int argc, char *argv[]) {
+
+    CleanExit cleanExit;
     QCoreApplication a(argc, argv);
 
     //ignore SIGPIPE signal (broken pipe issue)
@@ -62,14 +79,15 @@ int main(int argc, char *argv[])
 
     string ip ="127.0.0.1";
 
-    if (args.size() >2)
-    {
+    if (args.size() >2) {
+
         ip=args[1].toStdString();
         bool ok = false;
         int dec = args[2].toInt(&ok, 10);
 
         if (ok)
             port = dec;
+
     }
 
     ClientSocketHandler *clientHandler = new ClientSocketHandler();
@@ -77,8 +95,8 @@ int main(int argc, char *argv[])
     //instance of websocket server
     WebsocketServer server;
 
-    if (useSSL)
-    {
+    if (useSSL) {
+
         //set secured websocket server
         server.setSSL(true);
 
@@ -88,6 +106,7 @@ int main(int argc, char *argv[])
         server.setPublicCert(SslHandler::retrieveCertFromFile(PUBLIC_CERT));
         server.setPrivateCert(SslHandler::retrieveKeyCertFile(PRIVATE_CERT,PRIVATE_CERT_PASS));
         server.setCaCert(SslHandler::retrieveveCaCertListFromFile(CA_CERTS));
+
     }
 
     server.addClientEventListener(clientHandler);

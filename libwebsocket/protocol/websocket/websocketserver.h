@@ -13,7 +13,6 @@
 #ifndef WEBSOCKETSERVER_H
 #define WEBSOCKETSERVER_H
 
-#include "libwebsocket_global.h"
 #include <QtNetwork>
 #include <QObject>
 #include <QTcpServer>
@@ -38,7 +37,7 @@
  *  <li>manage process of incoming data from client socket</li>
  * </ul>
  */
-class LIBWEBSOCKETSHARED_EXPORT WebsocketServer: public QTcpServer
+class WebsocketServer: public QTcpServer
 {
 
     Q_OBJECT
@@ -139,7 +138,7 @@ private slots:
     void slot_peerVerifyError (const QSslError &);
     void slot_sslErrors (const QList<QSslError> &);
 
-    bool containsHttpProcessedFrames(std::vector<Ihttpframe*> frameList);
+    bool containsHttpProcessedFrames(std::vector<httpframe> frameList);
 
 private:
 

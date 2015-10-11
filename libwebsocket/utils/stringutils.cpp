@@ -51,30 +51,6 @@ vector<string> stringutils::split(const string &s, char delim, vector<string> &e
 }
 
 /**
- * @brief isNum
- *      check if char * is numeric data
- * @param s
- *      char * input
- * @return
- *      true if data is numeric
- */
-bool stringutils::isNum(char *s) {
-    int i = 0,  flag;
-
-    while(s[i]){
-            //if there is a letter in a string then string is not a number
-        if(isalpha(s[i])){
-            flag = 0;
-            break;
-        }
-        else flag = 1;
-        i++;
-        }
-    if (flag == 1) return true;
-    else return false;
-}
-
-/**
  * @brief stringutils::ltrim
  *      Trim string from start
  * @param s

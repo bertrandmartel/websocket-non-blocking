@@ -39,7 +39,13 @@ ClientSocket::~ClientSocket(){
  * @return
  */
 std::string ClientSocket::getPeerAddress(){
-    return clientSocket->peerAddress().toString().toStdString();
+
+    if (clientSocket!=0){
+        return clientSocket->peerAddress().toString().toStdString();
+    }
+    else{
+        return "";
+    }
 }
 
 /**

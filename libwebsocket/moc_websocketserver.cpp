@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'websocketserver.h'
 **
-** Created: Sat Aug 29 15:37:11 2015
+** Created: Sun Oct 11 23:38:39 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -63,8 +63,7 @@ static const char qt_meta_stringdata_WebsocketServer[] = {
     "mode\0slot_modeChanged(QSslSocket::SslMode)\0"
     "slot_peerVerifyError(QSslError)\0"
     "slot_sslErrors(QList<QSslError>)\0bool\0"
-    "frameList\0"
-    "containsHttpProcessedFrames(std::vector<Ihttpframe*>)\0"
+    "frameList\0containsHttpProcessedFrames(std::vector<httpframe>)\0"
 };
 
 void WebsocketServer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -87,7 +86,7 @@ void WebsocketServer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         case 11: _t->slot_modeChanged((*reinterpret_cast< QSslSocket::SslMode(*)>(_a[1]))); break;
         case 12: _t->slot_peerVerifyError((*reinterpret_cast< const QSslError(*)>(_a[1]))); break;
         case 13: _t->slot_sslErrors((*reinterpret_cast< const QList<QSslError>(*)>(_a[1]))); break;
-        case 14: { bool _r = _t->containsHttpProcessedFrames((*reinterpret_cast< std::vector<Ihttpframe*>(*)>(_a[1])));
+        case 14: { bool _r = _t->containsHttpProcessedFrames((*reinterpret_cast< std::vector<httpframe>(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
         default: ;
         }

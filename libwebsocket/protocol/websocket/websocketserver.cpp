@@ -362,14 +362,14 @@ void WebsocketServer::incomingData(){
             //iterate through all http streaming frames
             while (containsHttpProcessedFrames(consumer->getHttpFrameList())){
                 //take into account only http frames that have been processed successfully
-                if (consumer->getHttpFrameList().at(count)->isFinishedProcessing()){
+                if (consumer->getHttpFrameList().at(count).isFinishedProcessing()){
                     //check that websocket handshake from client has been detected
-                    if (websockethandshake::getWebsocketHandshakeProcess(consumer->getHttpFrameList().at(count)->getHeaders())){
+                    if (websockethandshake::getWebsocketHandshakeProcess(consumer->getHttpFrameList().at(count).getHeaders())){
                         //write websocket handshake to client
                         QTextStream os(clientSocket);
                         os.setAutoDetectUnicode(true);
 
-                        os << websockethandshake::buildWebsocketHandshake(stringutils::trim((*consumer->getHttpFrameList().at(count)->getHeaders()).at("Sec-WebSocket-Key")).data()).data();
+                        os << websockethandshake::buildWebsocketHandshake(stringutils::trim(consumer->getHttpFrameList().at(count).getHeaders().at("Sec-WebSocket-Key")).data()).data();
                         os.flush();
 
                         obj.setWebsocketState(true);
@@ -382,9 +382,9 @@ void WebsocketServer::incomingData(){
                     }
 
                     //last element of http frame must be removed to avoid to be popped next time we process frames
-                    std::vector<Ihttpframe*> frameList = consumer->getHttpFrameList();
+                    std::vector<httpframe> frameList = consumer->getHttpFrameList();
                     frameList.pop_back();
-                    consumer->setHttpFrameList(&frameList);
+                    consumer->setHttpFrameList(frameList);
                 }
                 else
                     cout << "Current HTTP frame has not been processed correctly." << endl;
@@ -410,11 +410,11 @@ void WebsocketServer::incomingData(){
  *      list of http frames
  * @return
  */
-bool WebsocketServer::containsHttpProcessedFrames(std::vector<Ihttpframe*> frameList){
+bool WebsocketServer::containsHttpProcessedFrames(std::vector<httpframe> frameList){
 
     for (int i = 0; i < frameList.size();i++){
 
-        if (frameList.at(i)->isFinishedProcessing()){
+        if (frameList.at(i).isFinishedProcessing()){
             return true;
         }
     }
@@ -445,7 +445,7 @@ void WebsocketServer::closeClientSocket(QSslSocket* socket){
 
     //manage unconnected state
     if (socket->state() == QSslSocket::UnconnectedState) {
-         delete socket;
+         //delete socket;
          cout << "Connection closed" << endl;
     }
 }
