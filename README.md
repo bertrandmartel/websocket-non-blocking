@@ -6,8 +6,9 @@ Websocket non-blocking Server implementation using QTNetwork framework (QT4)
 
 This project uses this http streaming decoder : http://akinaru.github.io/http-streaming-decoder-cpp/
 
-<i>Last update 16/05/2015</i>
+<i>Last update 11/10/2015</i>
 
+* [11/10/2015] memcheck free
 * [16/05/2015] add SSL/TLS support
 * [14/05/2015] add Client event listener
 
@@ -170,6 +171,18 @@ You can add library path to LD_LIBRARY_PATH variable for a quick run :
 
 
 ![server side](https://raw.github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/serverSide.png)
+
+<hr/>
+
+<b>Memory checking</b>
+
+```
+cd libwebsocket-test/release
+
+valgrind --tool=memcheck --leak-check=full --suppressions=../../memcheck.suppress ./libwebsocket-test <ip> <port>
+
+```
+
 <hr/>
 
 * Project is Qt4 compliant
