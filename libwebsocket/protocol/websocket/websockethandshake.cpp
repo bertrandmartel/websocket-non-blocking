@@ -54,9 +54,9 @@ bool websockethandshake::getWebsocketHandshakeProcess(std::map<std::string,std::
 
     for(std::map<std::string, std::string>::iterator it = headerMap.begin(); it != headerMap.end(); it++) {
 
-        if (strcmp(it->first.c_str(),"Upgrade")==0 && strcmp(it->first.c_str(),"websocket"))
+        if (strcmp(it->first.c_str(),"Upgrade")==0 && strcmp(it->second.c_str(),"websocket")==0)
             upgradeHeader=true;
-        if (strcmp(it->first.c_str(),"Connection")==0 && strcmp(it->first.c_str(),"Upgrade"))
+        if (strcmp(it->first.c_str(),"Connection")==0 && strcmp(it->second.c_str(),"Upgrade")==0)
             connectionHeader=true;
         if (strcmp(it->first.c_str(),"Sec-WebSocket-Key")==0)
             websocketKeyHeader=true;
