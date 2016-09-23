@@ -21,6 +21,32 @@ Stop websocket server :
 server.close();
 ```
 
+## Integrate in your project
+
+* from git submodule
+
+```
+git submodule add git://github.com/akinaru/websocket-non-blocking.git
+```
+
+and in your `project.pro` :
+
+```
+TEMPLATE = subdirs
+SUBDIRS = websocket-non-blocking your-app
+your-app.depends = websocket-non-blocking
+```
+
+with in `your-app.pro` :
+
+```
+TARGET = your-app
+SOURCES = main.cpp
+INCLUDEPATH += $$PWD/../websocket-non-blocking/libwebsocket/release
+LIBS += -L$$PWD/../websocket-non-blocking/libwebsocket/release -lwebsocket
+DEPENDPATH += $$PWD/../websocket-non-blocking/libwebsocket/release
+```
+
 ## Monitor clients
 
 Build your own client monitoring class that inherits `IClientEventListener` : 
