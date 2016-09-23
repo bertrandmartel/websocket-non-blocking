@@ -5,7 +5,7 @@
     <title>websocket-non-blocking-cpp by akinaru</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
@@ -13,57 +13,94 @@
     <section class="page-header">
       <h1 class="project-name">websocket-non-blocking-cpp</h1>
       <h2 class="project-tagline">websocket non-blocking server implementation in C++</h2>
-      <a href="https://github.com/akinaru/websocket-non-blocking-cpp" class="btn">View on GitHub</a>
-      <a href="https://github.com/akinaru/websocket-non-blocking-cpp/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/akinaru/websocket-non-blocking-cpp/tarball/master" class="btn">Download .tar.gz</a>
+      <a href="https://github.com/akinaru/websocket-non-blocking" class="btn">View on GitHub</a>
+      <a href="https://github.com/akinaru/websocket-non-blocking/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/akinaru/websocket-non-blocking/tarball/master" class="btn">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
       <h1>
-<a id="websocket-non-blocking-c-server-implementation" class="anchor" href="#websocket-non-blocking-c-server-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Websocket non-blocking C++ Server implementation</h1>
+<a id="websocket-non-blocking-server-library" class="anchor" href="#websocket-non-blocking-server-library" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Websocket non-blocking server library</h1>
 
-<p><a href="http://akinaru.github.io/websocket-non-blocking-cpp/">http://akinaru.github.io/websocket-non-blocking-cpp/</a></p>
+<p><a href="https://travis-ci.org/akinaru/websocket-non-blocking"><img src="https://travis-ci.org/akinaru/websocket-non-blocking.svg?branch=master" alt="Build Status"></a>
+<a href="LICENSE.md"><img src="http://img.shields.io/:license-mit-blue.svg" alt="License"></a></p>
 
-<p>Websocket non-blocking Server implementation using QTNetwork framework (QT4)</p>
+<p><a href="http://akinaru.github.io/websocket-non-blocking/">http://akinaru.github.io/websocket-non-blocking/</a></p>
 
-<p><i>Last update 16/05/2015</i></p>
+<p>C++ websocket non-blocking server library for Qt4/Qt5</p>
 
-<ul>
-<li>[16/05/2015] add SSL/TLS support</li>
-<li>[14/05/2015] add Client event listener</li>
-</ul>
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
 
-<hr>
-
-<p>You will find : </p>
-
-<ul>
-<li>source in ./libwebsocket folder</li>
-<li>test project with secured and unsecured JS websocket client exemples featuring interactions with websocket server in ./libwebsocket-test folder</li>
-</ul>
-
-<hr>
-
-<p><b>How to launch Websocket Server ?</b></p>
+<p>Start websocket server :</p>
 
 <pre><code>WebsocketServer server;
 
-bool success = server.listen(QHostAddress(ip),port)
+bool success = server.listen(QHostAddress("127.0.0.1"), 8443);
 </code></pre>
 
-<p>Specifying your own ip / port</p>
+<p>Stop websocket server :</p>
 
-<hr>
+<pre><code>server.close();
+</code></pre>
 
-<p><b>How to monitor my clients connected to server ?</b></p>
+<h2>
+<a id="integrate-in-your-project" class="anchor" href="#integrate-in-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integrate in your project</h2>
 
-<p>Add an instance of <code>ClientSocketHandler</code> you can import with <code>#include "ClientSockethandler.h"</code> :</p>
+<ul>
+<li>from git submodule</li>
+</ul>
 
-<p><code>ClientSocketHandler *clientHandler = new ClientSocketHandler();</code></p>
+<pre><code>git submodule add git://github.com/akinaru/websocket-non-blocking.git
+</code></pre>
 
-<p>Just add this listener to server object. </p>
+<p>and in your <code>project.pro</code> :</p>
 
-<p><code>server.addClientEventListener(clientHandler);</code></p>
+<pre><code>TEMPLATE = subdirs
+SUBDIRS = websocket-non-blocking your-app
+your-app.depends = websocket-non-blocking
+</code></pre>
+
+<p>with in <code>your-app.pro</code> :</p>
+
+<pre><code>TARGET = your-app
+SOURCES = main.cpp
+INCLUDEPATH += $$PWD/../websocket-non-blocking/libwebsocket/release
+LIBS += -L$$PWD/../websocket-non-blocking/libwebsocket/release -lwebsocket
+DEPENDPATH += $$PWD/../websocket-non-blocking/libwebsocket/release
+</code></pre>
+
+<h2>
+<a id="monitor-clients" class="anchor" href="#monitor-clients" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Monitor clients</h2>
+
+<p>Build your own client monitoring class that inherits <code>IClientEventListener</code> : </p>
+
+<pre><code>class ClientSocketHandler :  public IClientEventListener
+{
+public:
+
+    ClientSocketHandler();
+
+    ~ClientSocketHandler();
+
+    void onClientClose(IWebsocketClient &amp;client);
+
+    void onClientConnection(IWebsocketClient &amp;client);
+
+    void onMessageReceivedFromClient(IWebsocketClient &amp;client, std::string message);
+};
+</code></pre>
+
+<p>Add listener to server instance : </p>
+
+<pre><code>#include "ClientSockethandler.h"
+
+....
+
+ClientSocketHandler *clientHandler = new ClientSocketHandler();
+
+server.addClientEventListener(clientHandler);
+</code></pre>
 
 <p>In this <code>ClientSocketHandler</code> you have 3 callbacks that will notify you on client connection change and arrival of client messages :</p>
 
@@ -86,14 +123,14 @@ bool success = server.listen(QHostAddress(ip),port)
 }
 </code></pre>
 
-<hr>
+<p>Check the client monitoring example <a href="./libwebsocket-test/ClientSocketHandler.cpp">here</a></p>
 
-<p><b>How to launch a SSL secured websocket server ?</b></p>
+<h2>
+<a id="ssl-secured-websocket-server" class="anchor" href="#ssl-secured-websocket-server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SSL secured websocket server</h2>
 
 <pre><code>WebsocketServer server;
 
 server.setSSL(true); // set SSL to true (default is false)
-
 </code></pre>
 
 <p>Then you set your public/private/ca certificates separately with respective methods : </p>
@@ -103,62 +140,51 @@ server.setPrivateCert(SslHandler::retrieveKeyCertFile(PRIVATE_CERT,PRIVATE_CERT_
 server.setCaCert(SslHandler::retrieveveCaCertListFromFile(CA_CERTS));
 </code></pre>
 
-<p>You can use static method from SslHandler in libwebsocket-test project folder</p>
+<p>You can use static method from <a href="./libwebsocket-test/SslHandler.cpp"><code>SslHandler</code></a> :</p>
 
 <ul>
-<li>public cert must be a QSslCertificate : SslHandler::retrieveCertFromFile(char * filepath)</li>
-<li>private cert must be a QSslKey : SslHandler::retrieveKeyCertFile(char * filepath,char * passKey)</li>
-<li>ca cert must be a QList of QSslCertificate : SslHandler::retrieveveCaCertListFromFile(char * filepath)</li>
+<li>public cert must be a QSslCertificate : <code>SslHandler::retrieveCertFromFile(char * filepath)</code>
+</li>
+<li>private cert must be a QSslKey : <code>SslHandler::retrieveKeyCertFile(char * filepath,char * passKey)</code>
+</li>
+<li>CA cert must be a QList of QSslCertificate : <code>SslHandler::retrieveveCaCertListFromFile(char * filepath)</code>
+</li>
 </ul>
 
 <p>Eventually add event listener as described above and start websocket server : </p>
 
 <pre><code>server.addClientEventListener(clientHandler);
 
-bool success = server.listen(QHostAddress(ip),port)
-
+bool success = server.listen(QHostAddress("127.0.0.1"), 8443);
 </code></pre>
 
-<p>Specifying your own ip / port</p>
+<h2>
+<a id="troubleshooting-ssl-errors-with-local-browser-js-client" class="anchor" href="#troubleshooting-ssl-errors-with-local-browser-js-client" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Troubleshooting SSL errors with local browser JS client</h2>
 
-<hr>
-
-<p><b>Troubleshooting SSL errors with local browser JS client</b> </p>
-
-<p><i>Bad certificate | Unknown CA errors</i></p>
+<blockquote>
+<p>Bad certificate | Unknown CA errors</p>
+</blockquote>
 
 <p>This could mean you didn't import your not-trusted-CA certificate into your browser.</p>
 
-<p><i>The remote host closed the connection</i></p>
-
-<p>Usually happen when your browser closed the connection before the end of SSL handshake. If you already added your CA to your browser dont worry.
-Both Chrome and Firefox need to MANUALLY add the certificate (in a popup) so putting it in parameter menu don't change anything.</p>
+<blockquote>
+<p>The remote host closed the connection</p>
+</blockquote>
 
 <p>Just load your URL with "https" : <a href="https://127.0.0.1:8443">https://127.0.0.1:8443</a> . Browser will prompt you to accept the certificates and it will probably solve your connection error.</p>
 
-<p><b>Browser tested</b></p>
+<h2>
+<a id="debugging-ssl-connection-error" class="anchor" href="#debugging-ssl-connection-error" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Debugging SSL connection error</h2>
 
-<p>This has been tested on following browser : </p>
+<p>use openssl command line tool to debug ssl connection : </p>
 
-<ul>
-<li>Chrome</li>
-<li>Chromium</li>
-<li>Firefox</li>
-</ul>
+<pre><code>openssl s_client -connect 127.0.0.1:8443
+</code></pre>
 
-<hr>
+<h2>
+<a id="server-client-keycert-generation" class="anchor" href="#server-client-keycert-generation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Server-Client key/cert generation</h2>
 
-<p><b>Debugging SSL connection error</b></p>
-
-<p>I recommmend using openssl command line tool to debug ssl connection : </p>
-
-<p><code>openssl s_client -connect 127.0.0.1:8443</code></p>
-
-<hr>
-
-<p><b>Server-Client key/cert generation</b></p>
-
-<p>Certs are in libwesocket-test/certs folder, you will find server,client and ca cert build with easy-rsa :</p>
+<p>Sample certs are in <a href="./libwesocket-test/certs">libwesocket-test/certs</a> folder, you will find server,client and ca cert build with easy-rsa :</p>
 
 <p><a href="https://github.com/OpenVPN/easy-rsa">https://github.com/OpenVPN/easy-rsa</a></p>
 
@@ -173,53 +199,57 @@ Both Chrome and Firefox need to MANUALLY add the certificate (in a popup) so put
 <code>./build-client-full myClient</code> : will build for you public cert and private cert signed with CA for client</li>
 </ul>
 
-<hr>
+<h2>
+<a id="build-library--examples" class="anchor" href="#build-library--examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build library &amp; examples</h2>
 
-<p><b>How to close my websocket server ?</b></p>
+<pre><code>qmake
+make
+</code></pre>
 
-<p><code>server.close();</code></p>
+<h2>
+<a id="run-examples" class="anchor" href="#run-examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run examples</h2>
 
-<hr>
+<p>Open a websocket on port 8443 :</p>
 
-<p><b>COMMAND LINE SYNTAX</b> </p>
+<pre><code>./libwebsocket-test/release/libwebsocket-test 127.0.0.1 8443
+</code></pre>
 
-<p>From /libwesocket-test/release folder : </p>
-
-<p>The following will open a websocket on port 8443 (default port value for my exemple)</p>
-
-<p><code>./libwebsocket-test 127.0.0.1 8443</code></p>
-
-<p>You can add library path to LD_LIBRARY_PATH variable for a quick run :</p>
-
-<p><code>LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOT/websocket-non-blocking-cpp/lib/:$ROOT/websocket-non-blocking-cpp/libwebsocket/release/</code></p>
+<p>Open Javascript clients located in <a href="./client-test/js">client-test/js</a> :</p>
 
 <hr>
 
-<p><b>Exemple with Javascript Client</b></p>
+<p><img src="./img/clientSide.png" alt="client side"></p>
+
+<hr>
+
+<p><img src="./img//serverSide.png" alt="server side"></p>
+
+<h2>
+<a id="valgrind-checking" class="anchor" href="#valgrind-checking" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Valgrind checking</h2>
+
+<pre><code>cd libwebsocket-test/release
+
+valgrind --tool=memcheck --leak-check=full --suppressions=../../memcheck.suppress ./libwebsocket-test &lt;ip&gt; &lt;port&gt;
+
+</code></pre>
+
+<h2>
+<a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compatibility</h2>
 
 <ul>
-<li>Launch the websocket server on port 8443</li>
-<li>Open the javascript client page in ./exemples/js/ folder</li>
+<li>Qt4</li>
+<li>Qt5</li>
 </ul>
 
-<p>=&gt; You have now a complete websocket chat between C++ websocket server &lt;-&gt; javascript client in websocket </p>
-
-<p><img src="https://raw.github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/clientSide.png" alt="client side"></p>
-
-<p><img src="https://raw.github.com/akinaru/websocket-non-blocking-cpp/master/exemples/readme_images/serverSide.png" alt="server side"></p>
-
-<hr>
+<h2>
+<a id="specification" class="anchor" href="#specification" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Specification</h2>
 
 <ul>
-<li>Project is Qt4 compliant</li>
-<li>You can build it with qmake</li>
-<li>Development on QtCreator</li>
-<li>Specification from <a href="https://tools.ietf.org/html/rfc6455">https://tools.ietf.org/html/rfc6455</a>
-</li>
+<li><a href="https://tools.ietf.org/html/rfc6455">https://tools.ietf.org/html/rfc6455</a></li>
 </ul>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/akinaru/websocket-non-blocking-cpp">websocket-non-blocking-cpp</a> is maintained by <a href="https://github.com/akinaru">akinaru</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/akinaru/websocket-non-blocking">websocket-non-blocking-cpp</a> is maintained by <a href="https://github.com/akinaru">akinaru</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
@@ -239,4 +269,3 @@ Both Chrome and Firefox need to MANUALLY add the certificate (in a popup) so put
 
   </body>
 </html>
-
