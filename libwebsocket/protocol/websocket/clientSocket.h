@@ -80,7 +80,7 @@ public:
      *  close websoclet client object
      *
      * @return
-     * 		0 if success -1 if error
+     *      0 if success -1 if error
      */
     int close();
 
@@ -88,9 +88,9 @@ public:
      * Send a message to websocket client
      *
      * @param string
-     * 		Message to be sent to client
+     *      Message to be sent to client
      * @return
-     *		0 if success -1 if error
+     *      0 if success -1 if error
      */
     int sendMessage(std::string message);
 

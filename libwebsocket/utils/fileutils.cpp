@@ -24,7 +24,7 @@ QByteArray fileutils::readFromFile(char * fileName)
 
     QByteArray byteArray;
 
-    if(file.open(QIODevice::ReadOnly))
+    if (file.open(QIODevice::ReadOnly))
     {
         byteArray = file.readAll();
         file.close();

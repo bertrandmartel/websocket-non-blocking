@@ -25,24 +25,24 @@ public :
      *
      * @param clientRef
      */
-    virtual void onClientClose(IWebsocketClient &client)= 0;
+    virtual void onClientClose(IWebsocketClient &client) = 0;
 
     /**
      * called when a websocket client has successfully connected to server
      *
      * @param client
      */
-    virtual void onClientConnection(IWebsocketClient &client)= 0;
+    virtual void onClientConnection(IWebsocketClient &client) = 0;
 
     /**
      * called when a message has been received from client
      *
      * @param client
-     * 		client object
+     *      client object
      * @param message
-     * 		message delivered
+     *      message delivered
      */
-    virtual void onMessageReceivedFromClient(IWebsocketClient &client,std::string message)= 0;
+    virtual void onMessageReceivedFromClient(IWebsocketClient &client, std::string message) = 0;
 };
 
 

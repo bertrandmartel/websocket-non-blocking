@@ -1,14 +1,8 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2015-05-09T16:41:37
-#
-#-------------------------------------------------
-
 QT       += core
 QT       += network
 QT       -= gui
 
-QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -std=c++0x -Wno-write-strings
 
 TARGET = libwebsocket-test
 
@@ -41,11 +35,10 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libwebsocket/release/re
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libwebsocket/release/debug/ -lwebsocket
 else:unix: LIBS += -L$$PWD/../libwebsocket/release/ -lwebsocket
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/ -lhttpdecoder
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/ -lhttpdecoder
-else:unix: LIBS += -L$$PWD/../libs/ -lhttpdecoder
+INCLUDEPATH += $$PWD/../http-streaming-decoder/httpdecoder/release
+LIBS += -L$$PWD/../http-streaming-decoder/httpdecoder/release -lhttpdecoder
+DEPENDPATH += $$PWD/../http-streaming-decoder/httpdecoder/release
 
 INCLUDEPATH += $$PWD/../libwebsocket/release
-INCLUDEPATH += $$PWD/../libs
+
 DEPENDPATH += $$PWD/../libwebsocket/release
-DEPENDPATH += $$PWD/../libs

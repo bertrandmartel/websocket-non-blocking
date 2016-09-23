@@ -2,5 +2,9 @@
 build-libwebsocket-test-Desktop-Release/**
 build-libwebsocket-test-Desktop-Debug/*
 *.o
-libwebsocket/liwebsocket-test.pro.user
-libwesocket-test/liwebsocket.pro.user
+libwebsocket/release
+libwebsocket-test/release
+Makefile
+libwebsocket/Makefile
+libwebsocket-test/Makefile
+libwebsocket/moc_*.cpp

@@ -39,7 +39,7 @@
 #include "ClientSockethandler.h"
 #include "SslHandler.h"
 
-#define ROOT_FOLDER       "/home/abathur/Bureau/open_source"
+#define ROOT_FOLDER       "/home/akinaru/open_source"
 #define PUBLIC_CERT       ROOT_FOLDER "/websocketcpp/libwebsocket-test/certs/server/server.crt"
 #define PRIVATE_CERT      ROOT_FOLDER "/websocketcpp/libwebsocket-test/certs/server/server.key"
 #define CA_CERTS          ROOT_FOLDER "/websocketcpp/libwebsocket-test/certs/ca.crt"
@@ -48,10 +48,10 @@
 using namespace std;
 
 static int port = 8443;
-static string ip="127.0.0.1";
-static bool useSSL = true;
+static string ip = "127.0.0.1";
+static bool useSSL = false;
 
-struct CleanExit{
+struct CleanExit {
 
     CleanExit() {
 
@@ -60,6 +60,8 @@ struct CleanExit{
     }
 
     static void exitQt(int sig) {
+
+        cout << "received signal : " << sig << endl;
 
         QCoreApplication::exit(0);
 
@@ -77,11 +79,11 @@ int main(int argc, char *argv[]) {
 
     QStringList args = a.arguments();
 
-    string ip ="127.0.0.1";
+    string ip = "127.0.0.1";
 
-    if (args.size() >2) {
+    if (args.size() > 2) {
 
-        ip=args[1].toStdString();
+        ip = args[1].toStdString();
         bool ok = false;
         int dec = args[2].toInt(&ok, 10);
 
@@ -104,15 +106,15 @@ int main(int argc, char *argv[]) {
 
         //set public / private and certification authority list into websocket server object
         server.setPublicCert(SslHandler::retrieveCertFromFile(PUBLIC_CERT));
-        server.setPrivateCert(SslHandler::retrieveKeyCertFile(PRIVATE_CERT,PRIVATE_CERT_PASS));
+        server.setPrivateCert(SslHandler::retrieveKeyCertFile(PRIVATE_CERT, PRIVATE_CERT_PASS));
         server.setCaCert(SslHandler::retrieveveCaCertListFromFile(CA_CERTS));
 
     }
 
     server.addClientEventListener(clientHandler);
 
-    if (!server.listen(QHostAddress(ip.data()),port)) {
-        qDebug() << "An error occured while initializing hope proxy server... Maybe another instance is already running on "<< ip.data() << ":" << port << endl;
+    if (!server.listen(QHostAddress(ip.data()), port)) {
+        qDebug() << "An error occured while initializing server... Maybe another instance is already running on " << ip.data() << ":" << port << endl;
         return -1;
     }
 

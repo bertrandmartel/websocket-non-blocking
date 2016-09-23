@@ -39,7 +39,7 @@ public:
      *            payload data
      */
     WebSocketMessage(int FIN_FRAME, int RSV_FRAME, int OPCODE_FRAME,
-            int MASK_FRAME, QByteArray maskKey, QByteArray payloadData);
+                     int MASK_FRAME, QByteArray maskKey, QByteArray payloadData);
 
     /**
      * @brief WebSocketMessage::WebSocketMessage

@@ -41,16 +41,16 @@ using namespace std;
  */
 WebSocketMessage::WebSocketMessage()
 {
-    FIN_FRAME=0;
-    RSV_FRAME=0;
-    OPCODE_FRAME=0;
-    MASK_FRAME=0;
-    PAYLOAD_LENGTH_FRAME=0;
-    payloadLengthValue=0;
-    opcodeType=0;
-    maskKey=0;
-    payloadData=0;
-    payloadLength=0;
+    FIN_FRAME = 0;
+    RSV_FRAME = 0;
+    OPCODE_FRAME = 0;
+    MASK_FRAME = 0;
+    PAYLOAD_LENGTH_FRAME = 0;
+    payloadLengthValue = 0;
+    opcodeType = 0;
+    maskKey = 0;
+    payloadData = 0;
+    payloadLength = 0;
 }
 
 /**
@@ -85,7 +85,7 @@ WebSocketMessage::WebSocketMessage(QByteArray payloadData)
  *            payload data
  */
 WebSocketMessage::WebSocketMessage(int FIN_FRAME, int RSV_FRAME, int OPCODE_FRAME,
-        int MASK_FRAME,QByteArray maskKey, QByteArray payloadData) {
+                                   int MASK_FRAME, QByteArray maskKey, QByteArray payloadData) {
     this->FIN_FRAME = FIN_FRAME;
     this->RSV_FRAME = RSV_FRAME;
     this->OPCODE_FRAME = OPCODE_FRAME;
@@ -102,7 +102,8 @@ WebSocketMessage::WebSocketMessage(int FIN_FRAME, int RSV_FRAME, int OPCODE_FRAM
  *
  * @return byte array to be sent to outputstream
  * */
-QByteArray WebSocketMessage::buildMessage() {    int mask_size = 0;
+QByteArray WebSocketMessage::buildMessage() {
+    int mask_size = 0;
     int lengthIndicator = 0;
     QByteArray lengthSize;
 
@@ -115,7 +116,7 @@ QByteArray WebSocketMessage::buildMessage() {    int mask_size = 0;
     /* FFFF = 65536 => 8 bytes for payload data length */
     if (this->payloadData.length() > 65535) {
 
-        QByteArray array(8,0);
+        QByteArray array(8, 0);
         lengthIndicator = WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_LIMIT2;
         int left = this->payloadData.length();
         int unit = 256;
@@ -126,24 +127,24 @@ QByteArray WebSocketMessage::buildMessage() {    int mask_size = 0;
             if (left == 0)
                 break;
         }
-        lengthSize[0]=array[0];
-        lengthSize[1]=array[1];
-        lengthSize[2]=array[2];
-        lengthSize[3]=array[3];
-        lengthSize[4]=array[4];
-        lengthSize[5]=array[5];
-        lengthSize[6]=array[6];
-        lengthSize[7]=array[7];
+        lengthSize[0] = array[0];
+        lengthSize[1] = array[1];
+        lengthSize[2] = array[2];
+        lengthSize[3] = array[3];
+        lengthSize[4] = array[4];
+        lengthSize[5] = array[5];
+        lengthSize[6] = array[6];
+        lengthSize[7] = array[7];
 
     } else if (this->payloadData.length() > 125) {
         /* 01111111 == 127 max */
-        QByteArray array(2,0);
+        QByteArray array(2, 0);
         array[0] =  (this->payloadData.length() >> 8);
         array[1] = (this->payloadData.length() >> 0);
 
         lengthIndicator = WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_LIMIT1;
-        lengthSize[0]=array[0];
-        lengthSize[1]=array[1];
+        lengthSize[0] = array[0];
+        lengthSize[1] = array[1];
     }
     else
     {
@@ -152,7 +153,7 @@ QByteArray WebSocketMessage::buildMessage() {    int mask_size = 0;
     }
 
     QByteArray message = QByteArray(1 + 1 + lengthSize.length() + mask_size
-            + this->payloadData.length(),0);
+                                    + this->payloadData.length(), 0);
 
     message[0] =  ((this->FIN_FRAME << 7) + (this->RSV_FRAME << 4) + (this->OPCODE_FRAME));
     message[1] = ((this->MASK_FRAME << 7) + lengthIndicator);
@@ -166,14 +167,14 @@ QByteArray WebSocketMessage::buildMessage() {    int mask_size = 0;
         message[2 + lengthSize.length() + 2] = this->maskKey[2];
         message[2 + lengthSize.length() + 3] = this->maskKey[3];
 
-        for (int i = 2 + lengthSize.length() + 4; i  < 2 + lengthSize.length() + 4+this->payloadData.length();i++)
+        for (int i = 2 + lengthSize.length() + 4; i  < 2 + lengthSize.length() + 4 + this->payloadData.length(); i++)
         {
-            message[i]=this->payloadData[i-(2 + lengthSize.length() + 4)];
+            message[i] = this->payloadData[i - (2 + lengthSize.length() + 4)];
         }
     } else {
-        for (int i = 2 + lengthSize.length(); i  < 2 + lengthSize.length()+this->payloadData.length();i++)
+        for (int i = 2 + lengthSize.length(); i  < 2 + lengthSize.length() + this->payloadData.length(); i++)
         {
-            message[i]=this->payloadData[i-(2 + lengthSize.length())];
+            message[i] = this->payloadData[i - (2 + lengthSize.length())];
         }
     }
     return message;
@@ -184,7 +185,7 @@ QByteArray WebSocketMessage::buildMessage() {    int mask_size = 0;
  */
 string WebSocketMessage::toString() {
     string ret = FIN_FRAME + " message(s) - ";
-    ret+= opcodeType + " -  ";
+    ret += opcodeType + " -  ";
     if (MASK_FRAME == 1) {
         ret += " PAYLOAD DATA IS MASKED";
     } else {
@@ -333,7 +334,7 @@ void WebSocketMessage::setPayload_length(QByteArray payload_length) {
     int length = 0;
     for (int i = 0; i < payload_length.length(); i++) {
         length += (payload_length[i] & 0xFF) << (8 * (payload_length.length()
-                - i - 1));
+                  - i - 1));
     }
     this->payloadLengthValue = length;
 }

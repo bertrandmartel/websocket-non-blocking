@@ -55,7 +55,7 @@ public:
     * @brief socketClientList
     *        socket client list
     */
-    static std::map<QSslSocket*,ClientSocket > socketClientList;
+    static std::map<QSslSocket*, ClientSocket > socketClientList;
 
     ~WebsocketServer();
 
@@ -154,7 +154,11 @@ private:
      *      new connection has come
      * @param socketDescriptor
      */
+#if QT_VERSION >= 0x050000
+    void incomingConnection(qintptr socketDescriptor);
+#else
     void incomingConnection(int socketDescriptor);
+#endif
 
     /**
      * @brief WebsocketServer::startServerEncryption

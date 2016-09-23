@@ -1,0 +1,3 @@
+[submodule "http-streaming-decoder"]
+	path = http-streaming-decoder
+	url = git://github.com/akinaru/http-streaming-decoder.git

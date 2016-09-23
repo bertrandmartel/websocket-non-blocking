@@ -30,7 +30,7 @@ public:
     static QSslCertificate retrieveCertFromFile(char * filename);
 
 
-    static QSslKey retrieveKeyCertFile(char * filename,char * certPass);
+    static QSslKey retrieveKeyCertFile(char * filename, char * certPass);
 
 
     /**

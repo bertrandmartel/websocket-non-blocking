@@ -24,7 +24,7 @@
  */
 class websockethandshake
 {
-    public:
+public:
 
     /**
      * @brief websockethandshake::buildWebsocketHandshake
@@ -43,7 +43,7 @@ class websockethandshake
      *      http headers
      * @return
      */
-    static bool getWebsocketHandshakeProcess(std::map<std::string,std::string> headerMap);
+    static bool getWebsocketHandshakeProcess(std::map<std::string, std::string> headerMap);
 
 };
 

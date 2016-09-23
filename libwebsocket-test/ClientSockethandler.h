@@ -15,39 +15,39 @@
  */
 class ClientSocketHandler :  public IClientEventListener
 {
-    public:
+public:
 
-         /**
-         * @brief ClientSocketHandler
-         *      build client socket handler
-         */
-        ClientSocketHandler();
+    /**
+    * @brief ClientSocketHandler
+    *      build client socket handler
+    */
+    ClientSocketHandler();
 
-        ~ClientSocketHandler();
+    ~ClientSocketHandler();
 
-        /**
-         * called when a websocket client connection closes
-         *
-         * @param clientRef
-         */
-        void onClientClose(IWebsocketClient &client);
+    /**
+     * called when a websocket client connection closes
+     *
+     * @param clientRef
+     */
+    void onClientClose(IWebsocketClient &client);
 
-        /**
-         * called when a websocket client has successfully connected to server
-         *
-         * @param client
-         */
-        void onClientConnection(IWebsocketClient &client);
+    /**
+     * called when a websocket client has successfully connected to server
+     *
+     * @param client
+     */
+    void onClientConnection(IWebsocketClient &client);
 
-        /**
-         * called when a message has been received from client
-         *
-         * @param client
-         * 		client object
-         * @param message
-         * 		message delivered
-         */
-        void onMessageReceivedFromClient(IWebsocketClient &client,std::string message);
+    /**
+     * called when a message has been received from client
+     *
+     * @param client
+     *      client object
+     * @param message
+     *      message delivered
+     */
+    void onMessageReceivedFromClient(IWebsocketClient &client, std::string message);
 };
 
 #endif // CLIENTSOCKETHANDLER_H

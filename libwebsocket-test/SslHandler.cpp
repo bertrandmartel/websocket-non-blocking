@@ -42,12 +42,12 @@ using namespace std;
  * @return
  *      QSslcertificate format
  */
-QSslCertificate SslHandler::retrieveCertFromFile(char * filename){
+QSslCertificate SslHandler::retrieveCertFromFile(char * filename) {
 
     //extract all cert in cert folder into byte array format
-    QByteArray certFormatted= fileutils::readFromFile(filename);
+    QByteArray certFormatted = fileutils::readFromFile(filename);
 
-    if (strcmp(certFormatted.data(),"")==0){
+    if (strcmp(certFormatted.data(), "") == 0) {
 
         cout << "Invalid server certs ..." << endl;
         QSslCertificate cert;
@@ -55,16 +55,16 @@ QSslCertificate SslHandler::retrieveCertFromFile(char * filename){
     }
 
     //put all these cert into SSL QT object format
-    QSslCertificate cert(certFormatted,QSsl::Pem);
+    QSslCertificate cert(certFormatted, QSsl::Pem);
 
     return cert;
 }
 
-QSslKey SslHandler::retrieveKeyCertFile(char * filename,char * certPass){
+QSslKey SslHandler::retrieveKeyCertFile(char * filename, char * certPass) {
     //extract all cert in cert folder into byte array format
-    QByteArray certFormatted= fileutils::readFromFile(filename);
+    QByteArray certFormatted = fileutils::readFromFile(filename);
 
-    if (strcmp(certFormatted.data(),"")==0) {
+    if (strcmp(certFormatted.data(), "") == 0) {
         cout << "Invalid server certs ..." << endl;
         QSslKey cert;
         return cert;
@@ -84,19 +84,19 @@ QSslKey SslHandler::retrieveKeyCertFile(char * filename,char * certPass){
  * @return
  *      QList< QSslCertificate > format
  */
-QList< QSslCertificate > SslHandler::retrieveveCaCertListFromFile(char * filename){
+QList< QSslCertificate > SslHandler::retrieveveCaCertListFromFile(char * filename) {
 
     QList< QSslCertificate > caCertificate;
 
-    QByteArray caCert= fileutils::readFromFile(filename);
+    QByteArray caCert = fileutils::readFromFile(filename);
 
-    if (strcmp(caCert.data(),"")==0){
+    if (strcmp(caCert.data(), "") == 0) {
         cout << "Invalid server certs ..." << endl;
         return caCertificate;
     }
 
     //put all these cert into SSL QT object format
-    QSslCertificate caCertObj(caCert,QSsl::Pem);
+    QSslCertificate caCertObj(caCert, QSsl::Pem);
 
     caCertificate.push_back(caCertObj);
 

@@ -20,16 +20,16 @@ using namespace std;
  * @brief ClientSocketObj::ClientSocketObj
  *      Build one client
  */
-ClientSocket::ClientSocket(){
-    websocketState=false;
-    clientSocket=0;
+ClientSocket::ClientSocket() {
+    websocketState = false;
+    clientSocket = 0;
 }
 
 /**
  * @brief ClientSocket::~ClientSocket
  *      clean pointers
  */
-ClientSocket::~ClientSocket(){
+ClientSocket::~ClientSocket() {
     //client socket should NOT be deleted here => connection MUST be deleted in websocketserver class
 }
 
@@ -38,12 +38,12 @@ ClientSocket::~ClientSocket(){
  *      Retrieve client ip address
  * @return
  */
-std::string ClientSocket::getPeerAddress(){
+std::string ClientSocket::getPeerAddress() {
 
-    if (clientSocket!=0){
+    if (clientSocket != 0) {
         return clientSocket->peerAddress().toString().toStdString();
     }
-    else{
+    else {
         return "";
     }
 }
@@ -56,7 +56,7 @@ std::string ClientSocket::getPeerAddress(){
  * @return
  *      list of string message decoded from websocket
  */
-QList<string> ClientSocket::websocketParse(QTcpSocket* socket){
+QList<string> ClientSocket::websocketParse(QTcpSocket* socket) {
     return websocketData.websocketParse(socket);
 }
 
@@ -66,7 +66,7 @@ QList<string> ClientSocket::websocketParse(QTcpSocket* socket){
  * @param open
  *      opening state
  */
-void ClientSocket::setOpen(bool open){
+void ClientSocket::setOpen(bool open) {
     websocketData.setOpen(open);
 }
 
@@ -75,7 +75,7 @@ void ClientSocket::setOpen(bool open){
  *      determine if websocket connection is ON
  * @return
  */
-bool ClientSocket::isOpen(){
+bool ClientSocket::isOpen() {
     return websocketData.isOpen();
 }
 
@@ -84,8 +84,8 @@ bool ClientSocket::isOpen(){
  *      set ENABLING state of websocket => mean socket connection will be maintained from that moment if state==true
  * @param state
  */
-void ClientSocket::setWebsocketState(bool state){
-    websocketState=state;
+void ClientSocket::setWebsocketState(bool state) {
+    websocketState = state;
 }
 
 /**
@@ -94,7 +94,7 @@ void ClientSocket::setWebsocketState(bool state){
  * @return
  *      state
  */
-bool ClientSocket::isWebsocketData(){
+bool ClientSocket::isWebsocketData() {
     return websocketState;
 }
 
@@ -102,9 +102,9 @@ bool ClientSocket::isWebsocketData(){
  *  close websoclet client object
  *
  * @return
- * 		0 if success -1 if error
+ *      0 if success -1 if error
  */
-int ClientSocket::close(){
+int ClientSocket::close() {
     clientSocket->close();
 
     return 0;
@@ -114,12 +114,12 @@ int ClientSocket::close(){
  * Send a message to websocket client
  *
  * @param string
- * 		Message to be sent to client
+ *      Message to be sent to client
  * @return
- *		0 if success -1 if error
+ *      0 if success -1 if error
  */
-int ClientSocket::sendMessage(std::string message){
-    WebSocketMessage response= WebSocketMessage(message.data());
+int ClientSocket::sendMessage(std::string message) {
+    WebSocketMessage response = WebSocketMessage(message.data());
     clientSocket->write(response.buildMessage());
     clientSocket->flush();
 
@@ -131,6 +131,6 @@ int ClientSocket::sendMessage(std::string message){
  *      set socket client socket
  * @param clientSocket
  */
-void ClientSocket::setSocketClient(QTcpSocket * clientSocket){
-    this->clientSocket=clientSocket;
+void ClientSocket::setSocketClient(QTcpSocket * clientSocket) {
+    this->clientSocket = clientSocket;
 }

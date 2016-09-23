@@ -44,7 +44,7 @@ using namespace std;
  */
 websocketimpl::websocketimpl()
 {
-    debug=false;
+    debug = false;
     initWebsocket();
 }
 
@@ -59,7 +59,7 @@ void websocketimpl::initWebsocket()
     message = WebSocketMessage();
     payloadLengthCounter = 0;
     maskKeyCounter = 0;
-    opened=true;
+    opened = true;
 }
 
 /**
@@ -69,7 +69,7 @@ void websocketimpl::initWebsocket()
  */
 void websocketimpl::setOpen(bool open)
 {
-    opened=open;
+    opened = open;
 }
 
 /**
@@ -100,7 +100,7 @@ int websocketimpl::getCurrentState()
  */
 void websocketimpl::setDebug(bool debugArg)
 {
-    debug=debugArg;
+    debug = debugArg;
 }
 
 /**
@@ -111,149 +111,149 @@ void websocketimpl::setDebug(bool debugArg)
  *      websocket from which streaming is decoded
  * @return
  */
-QList<string> websocketimpl:: websocketParse(QTcpSocket* socket){
+QList<string> websocketimpl:: websocketParse(QTcpSocket* socket) {
 
     QList<string> messageList;
 
     int currentByte = -2;
-    char ch =0;
+    char ch = 0;
 
-    while ((currentByte=socket->read(&ch,sizeof(ch)))!=0)
+    while ((currentByte = socket->read(&ch, sizeof(ch))) != 0)
     {
         int data = ((int) ch & 0xFF);
 
         switch (currentState) {
-            case NONE:
-            {
-                sizeCounter = 0;
-                currentState = FIN_STATE;
-            }
-            case FIN_STATE:
-            {
-                message.setFIN(data & WEBSOCKET_PROTOCOL_FIN);
-                currentState = RSV_STATE;
-            }
-            case RSV_STATE:
-            {
-                message.setRSV(data & WEBSOCKET_PROTOCOL_RSV);
-                currentState = OPCODE_STATE;
-            }
-            case OPCODE_STATE:
-            {
-                message.setOPCODE(data & WEBSOCKET_PROTOCOL_OPCODE);
-                message.setOpcodeType(data & WEBSOCKET_PROTOCOL_OPCODE);
+        case NONE:
+        {
+            sizeCounter = 0;
+            currentState = FIN_STATE;
+        }
+        case FIN_STATE:
+        {
+            message.setFIN(data & WEBSOCKET_PROTOCOL_FIN);
+            currentState = RSV_STATE;
+        }
+        case RSV_STATE:
+        {
+            message.setRSV(data & WEBSOCKET_PROTOCOL_RSV);
+            currentState = OPCODE_STATE;
+        }
+        case OPCODE_STATE:
+        {
+            message.setOPCODE(data & WEBSOCKET_PROTOCOL_OPCODE);
+            message.setOpcodeType(data & WEBSOCKET_PROTOCOL_OPCODE);
 
-                if (message.getOpcodeType() == CONNECTION_CLOSE_FRAME) {
-                    if (debug)
-                        cout << "websocket closing event received !" << endl;
+            if (message.getOpcodeType() == CONNECTION_CLOSE_FRAME) {
+                if (debug)
+                    cout << "websocket closing event received !" << endl;
 
-                    initWebsocket();
-                    opened=false;
-                    return messageList;
+                initWebsocket();
+                opened = false;
+                return messageList;
+            } else {
+                /* print opcode type */
+            }
+            currentState = MASK_STATE;
+            break;
+        }
+        case MASK_STATE:
+        {
+            message.setMASK(data & WEBSOCKET_PROTOCOL_MASK);
+            currentState = PAYLOAD_LENGTH;
+        }
+        case PAYLOAD_LENGTH:
+        {
+            message.setPAYLOAD_LENGTH_FRAME(data
+                                            & WEBSOCKET_PROTOCOL_PAYLOAD_LENGTH);
+            if (message.getPAYLOAD_LENGTH_FRAME() < WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_LIMIT1) {
+                message.setPayload_length(message
+                                          .getPAYLOAD_LENGTH_FRAME());
+                if (message.getMASK() == 0x01) {
+                    currentState = MASKING_KEY;
+                    message.maskKey = QByteArray(WEBSOCKET_PROTOCOL_MASK_KEY_SIZE, 0);
                 } else {
-                    /* print opcode type */
-                }
-                currentState = MASK_STATE;
-                break;
-            }
-            case MASK_STATE:
-            {
-                message.setMASK(data & WEBSOCKET_PROTOCOL_MASK);
-                currentState = PAYLOAD_LENGTH;
-            }
-            case PAYLOAD_LENGTH:
-            {
-                message.setPAYLOAD_LENGTH_FRAME(data
-                        & WEBSOCKET_PROTOCOL_PAYLOAD_LENGTH);
-                if (message.getPAYLOAD_LENGTH_FRAME() < WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_LIMIT1) {
-                    message.setPayload_length(message
-                            .getPAYLOAD_LENGTH_FRAME());
-                    if (message.getMASK() == 0x01) {
-                        currentState = MASKING_KEY;
-                        message.maskKey = QByteArray(WEBSOCKET_PROTOCOL_MASK_KEY_SIZE,0);
-                    } else {
-                        message.payloadData = QByteArray(message
-                                .getPayload_length(),0);
-                        currentState = PAYLOAD_DATA;
-                    }
-                } else if (message.getPAYLOAD_LENGTH_FRAME() == WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_LIMIT1) {
-                    message.payloadLength = QByteArray(WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_2BYTES,0);
-                    currentState = PAYLOAD_LENGTH_2_BYTES;
-                } else {
-                    message.payloadLength = QByteArray(WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_8BYTES,0);
-                    currentState = PAYLOAD_LENGTH_8_BYTES;
-                }
-                break;
-            }
-            case PAYLOAD_LENGTH_2_BYTES:
-            {
-                message.payloadLength[sizeCounter] =data;
-                sizeCounter++;
-                if (sizeCounter == WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_2BYTES) {
-                    message.setPayload_length(message.payloadLength);
-                    if (message.getMASK() == 0x01) {
-                        currentState = MASKING_KEY;
-                        message.maskKey = QByteArray(WEBSOCKET_PROTOCOL_MASK_KEY_SIZE,0);
-                    } else {
-                        message.payloadData = QByteArray(message
-                                .getPayload_length(),0);
-                        currentState = PAYLOAD_DATA;
-                    }
-                }
-                break;
-            }
-            case PAYLOAD_LENGTH_8_BYTES:
-            {
-                message.payloadLength[sizeCounter] = data;
-                sizeCounter++;
-                if (sizeCounter == WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_8BYTES) {
-                    message.setPayload_length(message.payloadLength);
-                    if (message.getMASK() == 0x01) {
-                        currentState = MASKING_KEY;
-                        message.maskKey = QByteArray(WEBSOCKET_PROTOCOL_MASK_KEY_SIZE,0);
-                    } else {
-                        message.payloadData = QByteArray(message
-                                .getPayload_length(),0);
-                        currentState = PAYLOAD_DATA;
-                    }
-                }
-                break;
-            }
-            case MASKING_KEY:
-            {
-                message.maskKey[maskKeyCounter] =  data;
-                maskKeyCounter++;
-                if (maskKeyCounter == WEBSOCKET_PROTOCOL_MASK_KEY_SIZE) {
                     message.payloadData = QByteArray(message
-                            .getPayload_length(),0);
+                                                     .getPayload_length(), 0);
                     currentState = PAYLOAD_DATA;
                 }
+            } else if (message.getPAYLOAD_LENGTH_FRAME() == WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_LIMIT1) {
+                message.payloadLength = QByteArray(WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_2BYTES, 0);
+                currentState = PAYLOAD_LENGTH_2_BYTES;
+            } else {
+                message.payloadLength = QByteArray(WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_8BYTES, 0);
+                currentState = PAYLOAD_LENGTH_8_BYTES;
+            }
+            break;
+        }
+        case PAYLOAD_LENGTH_2_BYTES:
+        {
+            message.payloadLength[sizeCounter] = data;
+            sizeCounter++;
+            if (sizeCounter == WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_2BYTES) {
+                message.setPayload_length(message.payloadLength);
+                if (message.getMASK() == 0x01) {
+                    currentState = MASKING_KEY;
+                    message.maskKey = QByteArray(WEBSOCKET_PROTOCOL_MASK_KEY_SIZE, 0);
+                } else {
+                    message.payloadData = QByteArray(message
+                                                     .getPayload_length(), 0);
+                    currentState = PAYLOAD_DATA;
+                }
+            }
+            break;
+        }
+        case PAYLOAD_LENGTH_8_BYTES:
+        {
+            message.payloadLength[sizeCounter] = data;
+            sizeCounter++;
+            if (sizeCounter == WEBSOCKET_PROTOCOL_PAYLOAD_SIZE_8BYTES) {
+                message.setPayload_length(message.payloadLength);
+                if (message.getMASK() == 0x01) {
+                    currentState = MASKING_KEY;
+                    message.maskKey = QByteArray(WEBSOCKET_PROTOCOL_MASK_KEY_SIZE, 0);
+                } else {
+                    message.payloadData = QByteArray(message
+                                                     .getPayload_length(), 0);
+                    currentState = PAYLOAD_DATA;
+                }
+            }
+            break;
+        }
+        case MASKING_KEY:
+        {
+            message.maskKey[maskKeyCounter] =  data;
+            maskKeyCounter++;
+            if (maskKeyCounter == WEBSOCKET_PROTOCOL_MASK_KEY_SIZE) {
+                message.payloadData = QByteArray(message
+                                                 .getPayload_length(), 0);
+                currentState = PAYLOAD_DATA;
+            }
+            break;
+        }
+        case PAYLOAD_DATA:
+        {
+            message.payloadData[payloadLengthCounter] =  data;
+            payloadLengthCounter++;
+            if (payloadLengthCounter == message.getPayload_length()) {
+                currentState = FINISHED_LOADING;
+            } else {
                 break;
             }
-            case PAYLOAD_DATA:
-            {
-                message.payloadData[payloadLengthCounter] =  data;
-                payloadLengthCounter++;
-                if (payloadLengthCounter == message.getPayload_length()) {
-                    currentState = FINISHED_LOADING;
-                } else {
-                    break;
-                }
-            }
-            case FINISHED_LOADING:
-            {
-                string data = "";
+        }
+        case FINISHED_LOADING:
+        {
+            string data = "";
 
-                if (message.getMASK() == 0x01) {
-                    data = QString(unmask(message.payloadData,
-                            message.maskKey)).toStdString();
-                } else {
-                    data = QString(message.payloadData).toStdString();
-                }
-                initWebsocket();
-
-                messageList.push_back(data);
+            if (message.getMASK() == 0x01) {
+                data = QString(unmask(message.payloadData,
+                                      message.maskKey)).toStdString();
+            } else {
+                data = QString(message.payloadData).toStdString();
             }
+            initWebsocket();
+
+            messageList.push_back(data);
+        }
         }
     }
 
@@ -278,7 +278,7 @@ QList<string> websocketimpl:: websocketParse(QTcpSocket* socket){
  * @return unmasked data payload
  */
 QByteArray websocketimpl::unmask(QByteArray maskedData, QByteArray mask) {
-    QByteArray unmaskedData(maskedData.length(),0);
+    QByteArray unmaskedData(maskedData.length(), 0);
     for (int i = 0; i < maskedData.length(); i++) {
         unmaskedData[i] = (((maskedData[i] & 0xFF) ^ (mask[i % 4] & 0xFF)) & 0xFF);
     }

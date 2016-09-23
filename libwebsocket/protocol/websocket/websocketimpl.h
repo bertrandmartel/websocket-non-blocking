@@ -52,7 +52,7 @@ public:
      */
     websocketimpl();
 
-    bool webSocketHandShake(std::map<std::string,std::string> headers);
+    bool webSocketHandShake(std::map<std::string, std::string> headers);
 
     /**
      * @brief websocketimpl::websocketParse
@@ -81,7 +81,7 @@ public:
      *            mask id byte array
      * @return unmasked data payload
      */
-    QByteArray unmask(QByteArray maskedData,QByteArray mask);
+    QByteArray unmask(QByteArray maskedData, QByteArray mask);
 
     /**
      * @brief websocketimpl::initWebsocket

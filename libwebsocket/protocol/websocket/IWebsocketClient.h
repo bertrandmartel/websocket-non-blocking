@@ -18,26 +18,26 @@ public :
      *  close websoclet client object
      *
      * @return
-     * 		0 if success -1 if error
+     *      0 if success -1 if error
      */
-    virtual int close()= 0;
+    virtual int close() = 0;
 
     /**
      * @brief getPeerAddress
      *      Retrieve client IP address
      * @return
      */
-    virtual std::string getPeerAddress()=0;
+    virtual std::string getPeerAddress() = 0;
 
     /**
      * Send a message to websocket client
      *
      * @param string
-     * 		Message to be sent to client
+     *      Message to be sent to client
      * @return
-     *		0 if success -1 if error
+     *      0 if success -1 if error
      */
-    virtual int sendMessage(std::string message)= 0;
+    virtual int sendMessage(std::string message) = 0;
 };
 
 #endif // IWEBSOCKETCLIENT_H

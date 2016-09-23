@@ -1,9 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2015-05-09T16:08:36
-#
-#-------------------------------------------------
-
 QT       += network
 QT       -= gui
 
@@ -26,12 +20,9 @@ HEADERS += protocol/websocket/*.h \
         utils/*.h \
         crypto/*.h
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/release/ -lhttpdecoder
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/debug/ -lhttpdecoder
-else:unix: LIBS += -L$$PWD/../libs/ -lhttpdecoder
-
-INCLUDEPATH += $$PWD/../libs
-DEPENDPATH += $$PWD/../libs
+INCLUDEPATH += $$PWD/../http-streaming-decoder/httpdecoder/release
+LIBS += -L$$PWD/../http-streaming-decoder/httpdecoder/release -lhttpdecoder
+DEPENDPATH += $$PWD/../http-streaming-decoder/httpdecoder/release
 
 QMAKE_CLEAN += -r $${PWD}/$${DESTDIR}
 

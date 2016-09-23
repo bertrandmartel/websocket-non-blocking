@@ -1,0 +1,17 @@
+language: cpp
+sudo: required
+dist: trusty
+before_install:
+    - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq libqt5webkit5-dev qtdeclarative5-dev
+    - sudo apt-get install -qq libqt4-core libqt4-dev libqt4-gui qt4-dev-tools
+script:
+    - qmake -qt=qt5 -v
+    - qmake -qt=qt5
+    - make
+    - make clean
+    - find . -name "Makefile" -type f -delete
+    - qmake -qt=qt4 -v
+    - qmake -qt=qt4
+    - make

@@ -58,8 +58,8 @@ vector<string> stringutils::split(const string &s, char delim, vector<string> &e
  * @return
  */
 string& stringutils::ltrim(string& s) {
-        s.erase(s.begin(), find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace))));
-        return s;
+    s.erase(s.begin(), find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace))));
+    return s;
 }
 
 /**
@@ -70,8 +70,8 @@ string& stringutils::ltrim(string& s) {
  * @return
  */
 string& stringutils::rtrim(string& s) {
-        s.erase(find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(), s.end());
-        return s;
+    s.erase(find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(), s.end());
+    return s;
 }
 
 /**
@@ -82,5 +82,5 @@ string& stringutils::rtrim(string& s) {
  * @return
  */
 string& stringutils::trim(string& s) {
-        return ltrim(rtrim(s));
+    return ltrim(rtrim(s));
 }
